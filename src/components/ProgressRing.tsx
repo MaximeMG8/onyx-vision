@@ -8,7 +8,7 @@ interface ProgressRingProps {
 const ProgressRing = ({ 
   progress, 
   size = 280, 
-  strokeWidth = 3,
+  strokeWidth = 2,
   children 
 }: ProgressRingProps) => {
   const radius = (size - strokeWidth) / 2;
@@ -17,10 +17,20 @@ const ProgressRing = ({
 
   return (
     <div className="relative inline-flex items-center justify-center">
+      {/* Outer glow layer */}
+      <div 
+        className="absolute inset-0 rounded-full"
+        style={{
+          boxShadow: '0 0 40px 8px rgba(255, 255, 255, 0.15), 0 0 80px 20px rgba(255, 255, 255, 0.08)',
+        }}
+      />
       <svg
         width={size}
         height={size}
-        className="progress-ring-glow -rotate-90"
+        className="-rotate-90"
+        style={{
+          filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.2))',
+        }}
       >
         {/* Background ring */}
         <circle
@@ -30,7 +40,7 @@ const ProgressRing = ({
           fill="none"
           stroke="hsl(var(--muted))"
           strokeWidth={strokeWidth}
-          opacity={0.3}
+          opacity={0.2}
         />
         {/* Progress ring */}
         <circle

@@ -12,10 +12,10 @@ const AddSavingsButton = ({ amount, currency = "€", onClick }: AddSavingsButto
       onClick={onClick}
       variant="luxury"
       size="lg"
-      className="animate-fade-up"
+      className="animate-fade-up w-full"
       style={{ animationDelay: '0.5s' }}
     >
-      Add Savings (+{amount}{currency})
+      Ajouter (+{amount}{currency})
     </Button>
   );
 };
