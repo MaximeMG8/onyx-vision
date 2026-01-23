@@ -88,8 +88,6 @@ export const useDepositManager = (initialSaved: number = 0) => {
   const depositDays = [...new Set(deposits.map(d => d.date))];
 
   const addDeposit = useCallback((amount: number): Deposit | null => {
-    if (hasDepositedToday) return null;
-    
     const newDeposit: Deposit = {
       id: Date.now().toString(),
       amount,
@@ -102,7 +100,7 @@ export const useDepositManager = (initialSaved: number = 0) => {
     saveDeposits(updated);
     
     return newDeposit;
-  }, [deposits, hasDepositedToday, today]);
+  }, [deposits, today]);
 
   const removeDeposit = useCallback((depositId: string) => {
     const updated = deposits.filter(d => d.id !== depositId);
