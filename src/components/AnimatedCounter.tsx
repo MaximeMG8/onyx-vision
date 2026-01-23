@@ -7,6 +7,7 @@ interface AnimatedCounterProps {
   currency?: string;
   showCurrency?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const AnimatedCounter = ({ 
@@ -14,7 +15,8 @@ const AnimatedCounter = ({
   duration = 500, 
   currency = "€",
   showCurrency = true,
-  className
+  className,
+  style
 }: AnimatedCounterProps) => {
   const [displayValue, setDisplayValue] = useState(value);
   const previousValue = useRef(value);
@@ -52,7 +54,7 @@ const AnimatedCounter = ({
 
   if (!showCurrency) {
     return (
-      <span className={cn("text-5xl md:text-6xl font-extralight tracking-tight text-foreground", className)}>
+      <span className={cn("text-5xl md:text-6xl font-extralight tracking-tight text-foreground", className)} style={style}>
         {formattedValue}
       </span>
     );

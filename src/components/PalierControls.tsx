@@ -14,13 +14,14 @@ interface PalierControlsProps {
   onAdd: (count: number) => void;
   onRemove: (count: number) => void;
   disabled?: boolean;
+  palierValue?: number;
 }
 
-const PalierControls = ({ onAdd, onRemove, disabled }: PalierControlsProps) => {
+const PalierControls = ({ onAdd, onRemove, disabled, palierValue = 15 }: PalierControlsProps) => {
   const [euroAmount, setEuroAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
-  const calculatedPaliers = euroAmount ? Math.round(parseFloat(euroAmount) / 15) : 0;
+  const calculatedPaliers = euroAmount ? Math.round(parseFloat(euroAmount) / palierValue) : 0;
 
   const handleMultipleAdd = () => {
     if (calculatedPaliers > 0) {
@@ -86,7 +87,7 @@ const PalierControls = ({ onAdd, onRemove, disabled }: PalierControlsProps) => {
               />
               {euroAmount && parseFloat(euroAmount) > 0 && (
                 <p className="text-center text-sm text-foreground font-light">
-                  = {calculatedPaliers} palier{calculatedPaliers > 1 ? 's' : ''} ({calculatedPaliers * 15}€)
+                  = {calculatedPaliers} palier{calculatedPaliers > 1 ? 's' : ''} ({calculatedPaliers * palierValue}€)
                 </p>
               )}
             </div>
