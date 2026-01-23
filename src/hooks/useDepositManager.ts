@@ -38,23 +38,12 @@ export const useDepositManager = (initialSaved: number = 0) => {
   const [deposits, setDeposits] = useState<Deposit[]>([]);
   const [timeUntilMidnight, setTimeUntilMidnight] = useState("");
 
-  // Load deposits on mount
+  // Load deposits on mount - reset to empty
   useEffect(() => {
-    const loaded = loadDeposits();
-    if (loaded.length === 0 && initialSaved > 0) {
-      // Initialize with a fake historical deposit if starting fresh
-      const initialDeposit: Deposit = {
-        id: "initial",
-        amount: initialSaved,
-        date: getDateString(new Date(Date.now() - 86400000)), // Yesterday
-        timestamp: Date.now() - 86400000,
-      };
-      setDeposits([initialDeposit]);
-      saveDeposits([initialDeposit]);
-    } else {
-      setDeposits(loaded);
-    }
-  }, [initialSaved]);
+    // Clear storage and start fresh
+    localStorage.removeItem(STORAGE_KEY);
+    setDeposits([]);
+  }, []);
 
   // Calculate time until midnight
   useEffect(() => {
