@@ -124,9 +124,9 @@ const DreamGoal = () => {
       {/* Luxury Progress Bar */}
       <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.15s' }}>
         <LuxuryProgressBar current={currentPaliers} total={totalPaliers} />
-        <div className="flex justify-between mt-2 text-xs text-muted-foreground font-extralight">
+        <div className="flex justify-between mt-3 text-xs text-muted-foreground font-extralight tracking-wide">
           <span>0€</span>
-          <span className="text-luxury-gold">{totalSaved.toLocaleString('fr-FR')}€</span>
+          <span className="text-foreground">{totalSaved.toLocaleString('fr-FR')}€</span>
           <span>{goal.toLocaleString('fr-FR')}€</span>
         </div>
       </div>

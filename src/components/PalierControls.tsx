@@ -30,38 +30,38 @@ const PalierControls = ({ onAdd, onRemove, disabled }: PalierControlsProps) => {
   };
 
   return (
-    <div className="flex items-center justify-center gap-4 w-full">
+    <div className="flex items-center justify-center gap-6 w-full">
       {/* Remove button */}
       <Button
         onClick={() => onRemove(1)}
-        variant="outline"
+        variant="ghost"
         size="icon"
-        className="w-14 h-14 rounded-full border-border/50 bg-card/50 hover:bg-card hover:border-foreground/30 transition-all duration-300"
+        className="w-12 h-12 rounded-full border border-border/30 hover:border-foreground/20 hover:bg-transparent transition-all duration-300"
         aria-label="Retirer un palier"
       >
-        <Minus className="w-6 h-6 text-foreground" strokeWidth={1.5} />
+        <Minus className="w-5 h-5 text-muted-foreground" strokeWidth={1} />
       </Button>
 
       {/* Add button */}
       <Button
         onClick={() => onAdd(1)}
         disabled={disabled}
-        variant="luxury"
+        variant="ghost"
         size="icon"
-        className="w-20 h-20 rounded-full text-2xl font-light shadow-lg shadow-luxury-gold/20"
+        className="w-16 h-16 rounded-full border border-foreground/30 hover:border-foreground/50 hover:bg-transparent transition-all duration-300"
         aria-label="Ajouter un palier"
       >
-        <Plus className="w-10 h-10" strokeWidth={1.5} />
+        <Plus className="w-8 h-8 text-foreground" strokeWidth={1} />
       </Button>
 
       {/* Multiple add dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button
-            variant="outline"
-            className="h-14 px-6 rounded-full border-luxury-gold/30 bg-card/50 hover:bg-card hover:border-luxury-gold/50 transition-all duration-300 font-extralight tracking-wider text-sm"
+            variant="ghost"
+            className="h-12 px-5 rounded-full border border-border/30 hover:border-foreground/20 hover:bg-transparent transition-all duration-300 font-extralight tracking-wider text-xs text-muted-foreground"
           >
-            Ajout Multiple
+            Multiple
           </Button>
         </DialogTrigger>
         <DialogContent className="bg-background border-border/50 max-w-xs">
@@ -84,15 +84,15 @@ const PalierControls = ({ onAdd, onRemove, disabled }: PalierControlsProps) => {
                 className="bg-card border-border/50 text-center text-lg font-light"
               />
               {multipleCount && parseInt(multipleCount) > 0 && (
-                <p className="text-center text-sm text-luxury-gold font-light">
+                <p className="text-center text-sm text-foreground font-light">
                   = {parseInt(multipleCount) * 15}€
                 </p>
               )}
             </div>
             <Button
               onClick={handleMultipleAdd}
-              variant="luxury"
-              className="w-full"
+              variant="outline"
+              className="w-full border-foreground/30 hover:bg-foreground hover:text-background"
               disabled={!multipleCount || parseInt(multipleCount) <= 0}
             >
               Confirmer

@@ -36,8 +36,8 @@
 
     --radius: 9999px;
 
-    /* Custom luxury tokens */
-    --luxury-gold: 45 100% 50%;
+    /* Custom luxury tokens - Monochrome */
+    --luxury-gold: 0 0% 100%;
     --luxury-silver: 0 0% 75%;
     --text-dim: 0 0% 45%;
     --progress-glow: 0 0% 100%;
