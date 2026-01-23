@@ -17,14 +17,15 @@ interface PalierControlsProps {
 }
 
 const PalierControls = ({ onAdd, onRemove, disabled }: PalierControlsProps) => {
-  const [multipleCount, setMultipleCount] = useState("");
+  const [euroAmount, setEuroAmount] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
+  const calculatedPaliers = euroAmount ? Math.round(parseFloat(euroAmount) / 15) : 0;
+
   const handleMultipleAdd = () => {
-    const count = parseInt(multipleCount);
-    if (count > 0) {
-      onAdd(count);
-      setMultipleCount("");
+    if (calculatedPaliers > 0) {
+      onAdd(calculatedPaliers);
+      setEuroAmount("");
       setIsOpen(false);
     }
   };
@@ -73,19 +74,19 @@ const PalierControls = ({ onAdd, onRemove, disabled }: PalierControlsProps) => {
           <div className="space-y-4 pt-4">
             <div className="space-y-2">
               <label className="text-xs text-muted-foreground tracking-wide">
-                Nombre de paliers (× 15€)
+                Montant en euros (€)
               </label>
               <Input
                 type="number"
                 min="1"
-                value={multipleCount}
-                onChange={(e) => setMultipleCount(e.target.value)}
-                placeholder="Ex: 10 paliers = 150€"
+                value={euroAmount}
+                onChange={(e) => setEuroAmount(e.target.value)}
+                placeholder="Ex: 150€"
                 className="bg-card border-border/50 text-center text-lg font-light"
               />
-              {multipleCount && parseInt(multipleCount) > 0 && (
+              {euroAmount && parseFloat(euroAmount) > 0 && (
                 <p className="text-center text-sm text-foreground font-light">
-                  = {parseInt(multipleCount) * 15}€
+                  = {calculatedPaliers} palier{calculatedPaliers > 1 ? 's' : ''} ({calculatedPaliers * 15}€)
                 </p>
               )}
             </div>
@@ -93,7 +94,7 @@ const PalierControls = ({ onAdd, onRemove, disabled }: PalierControlsProps) => {
               onClick={handleMultipleAdd}
               variant="outline"
               className="w-full border-foreground/30 hover:bg-foreground hover:text-background"
-              disabled={!multipleCount || parseInt(multipleCount) <= 0}
+              disabled={calculatedPaliers <= 0}
             >
               Confirmer
             </Button>
