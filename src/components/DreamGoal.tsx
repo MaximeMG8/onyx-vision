@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import { Camera, History } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import LuxuryProgressBar from "./LuxuryProgressBar";
@@ -7,34 +7,38 @@ import DailyHistory from "./DailyHistory";
 import DepositHistory from "./DepositHistory";
 import DepositCalendar from "./DepositCalendar";
 import AnimatedCounter from "./AnimatedCounter";
-import { useDepositManager } from "@/hooks/useDepositManager";
+import ProjectSelector from "./ProjectSelector";
+import { useProjectManager } from "@/hooks/useProjectManager";
 import { useToast } from "@/hooks/use-toast";
 import luxuryWatch from "@/assets/luxury-watch.jpg";
 
 const DreamGoal = () => {
-  const [customImage, setCustomImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
-  const goal = 10000;
-  const palierValue = 15;
-  const totalPaliers = Math.ceil(goal / palierValue); // 667 paliers
-  
   const {
+    isLoaded,
+    projects,
+    activeProject,
+    activeProjectId,
     deposits,
     totalSaved,
-    timeUntilMidnight,
+    totalPaliers,
+    currentPaliers,
+    progress,
     depositDays,
+    switchProject,
+    createProject,
+    deleteProject,
+    updateProjectImage,
     addDeposit,
     removeDeposit,
     getRecentDeposits,
-  } = useDepositManager(0);
-  
-  const currentPaliers = Math.floor(totalSaved / palierValue);
-  const progress = Math.min((currentPaliers / totalPaliers) * 100, 100);
+  } = useProjectManager();
 
   const handleAddPaliers = (count: number) => {
-    const amount = count * palierValue;
+    if (!activeProject) return;
+    const amount = count * activeProject.palierValue;
     const deposit = addDeposit(amount);
     if (deposit) {
       toast({
@@ -45,7 +49,7 @@ const DreamGoal = () => {
     }
   };
 
-  const handleRemovePaliers = (count: number) => {
+  const handleRemovePaliers = () => {
     const recentDeposits = getRecentDeposits(1);
     if (recentDeposits.length > 0) {
       removeDeposit(recentDeposits[0].id);
@@ -62,7 +66,7 @@ const DreamGoal = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setCustomImage(e.target?.result as string);
+        updateProjectImage(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -72,10 +76,19 @@ const DreamGoal = () => {
     fileInputRef.current?.click();
   };
 
-  const displayImage = customImage || luxuryWatch;
+  // Show loading state
+  if (!isLoaded || !activeProject) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground font-extralight">Chargement...</div>
+      </div>
+    );
+  }
+
+  const displayImage = activeProject.imageUrl || luxuryWatch;
 
   return (
-    <div className="min-h-screen bg-[#000000] flex flex-col items-center py-6 px-6 gap-6">
+    <div className="min-h-screen bg-background flex flex-col items-center py-6 px-6 gap-6">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -85,12 +98,20 @@ const DreamGoal = () => {
         className="hidden"
       />
 
-      {/* Header with History button */}
+      {/* Header with Project Selector and History */}
       <header className="w-full flex items-center justify-between animate-fade-up">
-        <div className="w-10" />
+        <ProjectSelector
+          projects={projects}
+          activeProjectId={activeProjectId}
+          onSwitchProject={switchProject}
+          onCreateProject={createProject}
+          onDeleteProject={deleteProject}
+        />
+        
         <h1 className="text-xs uppercase tracking-[0.5em] text-muted-foreground font-extralight">
-          MyDream
+          {activeProject.name}
         </h1>
+        
         <DepositHistory 
           deposits={getRecentDeposits(20)} 
           onRemoveDeposit={removeDeposit}
@@ -110,7 +131,8 @@ const DreamGoal = () => {
           <AnimatedCounter 
             value={currentPaliers}
             showCurrency={false}
-            className="text-5xl font-extralight text-foreground tracking-tight"
+            className="text-5xl font-extralight tracking-tight"
+            style={{ color: 'hsl(var(--accent-color))' }}
           />
           <span className="text-2xl font-extralight text-muted-foreground">
             / {totalPaliers}
@@ -126,12 +148,12 @@ const DreamGoal = () => {
         <LuxuryProgressBar current={currentPaliers} total={totalPaliers} />
         <div className="flex justify-between mt-3 text-xs text-muted-foreground font-extralight tracking-wide">
           <span>0€</span>
-          <span className="text-foreground">{totalSaved.toLocaleString('fr-FR')}€</span>
-          <span>{goal.toLocaleString('fr-FR')}€</span>
+          <span style={{ color: 'hsl(var(--accent-color))' }}>{totalSaved.toLocaleString('fr-FR')}€</span>
+          <span>{activeProject.targetAmount.toLocaleString('fr-FR')}€</span>
         </div>
       </div>
 
-      {/* Progress Ring with Watch */}
+      {/* Progress Ring with Image */}
       <div className="animate-scale-in relative">
         <ProgressRing progress={progress} size={Math.min(window.innerWidth * 0.6, 280)} strokeWidth={2}>
           <div 
@@ -143,7 +165,7 @@ const DreamGoal = () => {
           >
             <img
               src={displayImage}
-              alt="Mon Objectif Luxe"
+              alt={activeProject.name}
               className="w-full h-full object-cover opacity-75 grayscale"
             />
           </div>
@@ -164,12 +186,13 @@ const DreamGoal = () => {
         <PalierControls 
           onAdd={handleAddPaliers}
           onRemove={handleRemovePaliers}
+          palierValue={activeProject.palierValue}
         />
       </div>
 
       {/* Daily History */}
       <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.4s' }}>
-        <DailyHistory deposits={deposits} palierValue={palierValue} />
+        <DailyHistory deposits={deposits} palierValue={activeProject.palierValue} />
       </div>
 
       {/* Calendar */}

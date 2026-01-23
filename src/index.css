@@ -36,6 +36,9 @@
 
     --radius: 9999px;
 
+    /* Dynamic accent color - set by JS based on project */
+    --accent-color: 0 0% 100%;
+
     /* Custom luxury tokens - Monochrome */
     --luxury-gold: 0 0% 100%;
     --luxury-silver: 0 0% 75%;

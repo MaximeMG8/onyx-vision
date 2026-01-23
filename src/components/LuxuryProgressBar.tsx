@@ -13,9 +13,10 @@ const LuxuryProgressBar = ({ current, total }: LuxuryProgressBarProps) => {
       <div className="relative h-1 bg-muted rounded-full overflow-hidden border border-border/20">
         {/* Progress fill */}
         <motion.div
-          className="absolute inset-y-0 left-0 rounded-full bg-foreground"
+          className="absolute inset-y-0 left-0 rounded-full"
           style={{
-            boxShadow: "0 0 8px hsl(var(--foreground) / 0.3)",
+            backgroundColor: "hsl(var(--accent-color))",
+            boxShadow: "0 0 8px hsl(var(--accent-color) / 0.3)",
           }}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
