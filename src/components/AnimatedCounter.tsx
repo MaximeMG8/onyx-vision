@@ -1,12 +1,21 @@
 import { useEffect, useState, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface AnimatedCounterProps {
   value: number;
   duration?: number;
   currency?: string;
+  showCurrency?: boolean;
+  className?: string;
 }
 
-const AnimatedCounter = ({ value, duration = 500, currency = "€" }: AnimatedCounterProps) => {
+const AnimatedCounter = ({ 
+  value, 
+  duration = 500, 
+  currency = "€",
+  showCurrency = true,
+  className
+}: AnimatedCounterProps) => {
   const [displayValue, setDisplayValue] = useState(value);
   const previousValue = useRef(value);
 
@@ -41,8 +50,16 @@ const AnimatedCounter = ({ value, duration = 500, currency = "€" }: AnimatedCo
 
   const formattedValue = new Intl.NumberFormat('de-DE').format(displayValue);
 
+  if (!showCurrency) {
+    return (
+      <span className={cn("text-5xl md:text-6xl font-extralight tracking-tight text-foreground", className)}>
+        {formattedValue}
+      </span>
+    );
+  }
+
   return (
-    <div className="flex items-baseline justify-center gap-1">
+    <div className={cn("flex items-baseline justify-center gap-1", className)}>
       <span className="text-5xl md:text-6xl font-extralight tracking-tight text-foreground luxury-text-gradient">
         {formattedValue}
       </span>
