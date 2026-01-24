@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera, History, Settings } from "lucide-react";
+import { Camera, History, Settings, BarChart2 } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import LuxuryProgressBar from "./LuxuryProgressBar";
 import PalierControls from "./PalierControls";
@@ -115,6 +115,14 @@ const DreamGoal = () => {
         </h1>
         
         <div className="flex items-center gap-1">
+          <button
+            onClick={() => navigate("/master-analytics")}
+            className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
+            aria-label="Global Analytics"
+          >
+            <BarChart2 className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+          </button>
+          
           <DepositHistory 
             deposits={getRecentDeposits(20)} 
             onRemoveDeposit={removeDeposit}
