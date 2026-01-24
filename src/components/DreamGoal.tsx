@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { Camera, History } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Camera, History, Settings } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import LuxuryProgressBar from "./LuxuryProgressBar";
 import PalierControls from "./PalierControls";
@@ -13,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import luxuryWatch from "@/assets/luxury-watch.jpg";
 
 const DreamGoal = () => {
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   
@@ -98,7 +100,7 @@ const DreamGoal = () => {
         className="hidden"
       />
 
-      {/* Header with Project Selector and History */}
+      {/* Header with Project Selector, History, and Settings */}
       <header className="w-full flex items-center justify-between animate-fade-up">
         <ProjectSelector
           projects={projects}
@@ -112,17 +114,27 @@ const DreamGoal = () => {
           {activeProject.name}
         </h1>
         
-        <DepositHistory 
-          deposits={getRecentDeposits(20)} 
-          onRemoveDeposit={removeDeposit}
-        >
-          <button
-            className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
-            aria-label="Historique"
+        <div className="flex items-center gap-1">
+          <DepositHistory 
+            deposits={getRecentDeposits(20)} 
+            onRemoveDeposit={removeDeposit}
           >
-            <History className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+            <button
+              className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
+              aria-label="Historique"
+            >
+              <History className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+            </button>
+          </DepositHistory>
+          
+          <button
+            onClick={() => navigate("/settings")}
+            className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
+            aria-label="Paramètres"
+          >
+            <Settings className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
           </button>
-        </DepositHistory>
+        </div>
       </header>
 
       {/* Paliers Counter - Big Display */}

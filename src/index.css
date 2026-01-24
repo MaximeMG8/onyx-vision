@@ -90,6 +90,29 @@
     background: radial-gradient(circle at center, transparent 30%, hsl(0 0% 0% / 0.6) 100%);
     pointer-events: none;
   }
+
+  /* Settings input styling */
+  .settings-input {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid hsl(var(--border) / 0.3) !important;
+    border-radius: 0 !important;
+    padding: 0.75rem 0 !important;
+    font-weight: 200;
+    font-size: 1.125rem;
+    transition: border-color 0.3s ease;
+  }
+
+  .settings-input:focus {
+    border-bottom-color: hsl(var(--foreground) / 0.5) !important;
+    box-shadow: none !important;
+    outline: none !important;
+    ring: none !important;
+  }
+
+  .settings-input::placeholder {
+    color: hsl(var(--muted-foreground) / 0.4);
+  }
 }
 
 @layer utilities {
