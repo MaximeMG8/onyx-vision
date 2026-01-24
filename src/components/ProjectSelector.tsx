@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { FolderOpen, Plus, Check, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { FolderOpen, Plus, Check, Trash2, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -27,12 +28,19 @@ const ProjectSelector = ({
   onCreateProject,
   onDeleteProject,
 }: ProjectSelectorProps) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const handleSelectProject = (projectId: string) => {
     onSwitchProject(projectId);
     setIsOpen(false);
+  };
+
+  const handleViewProgress = (e: React.MouseEvent, projectId: string) => {
+    e.stopPropagation();
+    setIsOpen(false);
+    navigate(`/dashboard/${projectId}`);
   };
 
   const handleCreateProject = (name: string, targetAmount: number, color: ProjectColor, palierValue: number) => {
@@ -98,17 +106,26 @@ const ProjectSelector = ({
                       {project.targetAmount.toLocaleString('fr-FR')}€
                     </p>
                   </div>
-                  {isActive && (
-                    <Check className="w-4 h-4 text-foreground flex-shrink-0" strokeWidth={1.5} />
-                  )}
-                  {!isActive && projects.length > 1 && (
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     <button
-                      onClick={(e) => handleDeleteProject(e, project.id)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-destructive/20 rounded"
+                      onClick={(e) => handleViewProgress(e, project.id)}
+                      className="p-1.5 hover:bg-white/10 rounded transition-opacity"
+                      title="View Progress"
                     >
-                      <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth={1.5} />
+                      <BarChart3 className="w-4 h-4 text-muted-foreground hover:text-foreground" strokeWidth={1.5} />
                     </button>
-                  )}
+                    {isActive && (
+                      <Check className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+                    )}
+                    {!isActive && projects.length > 1 && (
+                      <button
+                        onClick={(e) => handleDeleteProject(e, project.id)}
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-destructive/20 rounded"
+                      >
+                        <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth={1.5} />
+                      </button>
+                    )}
+                  </div>
                 </button>
               );
             })}
