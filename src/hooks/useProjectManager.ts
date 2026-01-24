@@ -150,6 +150,11 @@ export const useProjectManager = () => {
       .slice(0, count);
   }, [activeDeposits]);
 
+  // Get all deposits across all projects
+  const getAllDeposits = useCallback(() => {
+    return deposits;
+  }, [deposits]);
+
   // Update project image
   const updateProjectImage = useCallback((imageUrl: string) => {
     if (activeProjectId) {
@@ -183,5 +188,6 @@ export const useProjectManager = () => {
     addDeposit,
     removeDeposit,
     getRecentDeposits,
+    getAllDeposits,
   };
 };
