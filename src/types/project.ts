@@ -7,6 +7,7 @@ export interface Project {
   palierValue: number;
   color: ProjectColor;
   imageUrl?: string;
+  deadline?: string; // ISO date string
   createdAt: number;
 }
 

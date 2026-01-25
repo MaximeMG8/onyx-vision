@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Target, TrendingUp, Wallet } from 'lucide-react';
+import { ArrowLeft, Target, TrendingUp, Wallet, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Project, ProjectDeposit } from '@/types/project';
 import ProgressChart from '@/components/ProgressChart';
 import FocusTimer from '@/components/FocusTimer';
+import { differenceInDays } from 'date-fns';
 
 const PROJECTS_KEY = 'mydream_projects';
 const DEPOSITS_KEY = 'mydream_all_deposits';
@@ -48,6 +49,11 @@ const ProjectDashboard = () => {
   const remainingBalance = Math.max(project.targetAmount - totalSaved, 0);
   const totalMilestones = Math.floor(totalSaved / project.palierValue);
 
+  // Calculate days remaining if deadline is set
+  const daysRemaining = project.deadline 
+    ? differenceInDays(new Date(project.deadline), new Date())
+    : null;
+
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
@@ -59,10 +65,10 @@ const ProjectDashboard = () => {
           className="text-white/80 hover:text-white hover:bg-transparent p-0"
         >
           <ArrowLeft className="w-5 h-5 mr-2" strokeWidth={1.5} />
-          <span className="text-xs uppercase tracking-[0.2em] font-light">Back</span>
+          <span className="text-xs uppercase tracking-[0.2em] font-extralight">Back</span>
         </Button>
         
-        <h1 className="text-sm uppercase tracking-[0.3em] font-light">
+        <h1 className="text-sm uppercase tracking-[0.3em] font-extralight">
           {project.name}
         </h1>
         
@@ -70,6 +76,23 @@ const ProjectDashboard = () => {
       </header>
 
       <main className="px-6 py-8 max-w-2xl mx-auto space-y-10">
+        {/* Deadline Countdown - Only show if deadline is set */}
+        {daysRemaining !== null && (
+          <section className="border border-white/10 rounded-lg p-4">
+            <div className="flex items-center justify-center gap-3">
+              <Clock className="w-5 h-5 text-white/60" strokeWidth={1.5} />
+              <div className="text-center">
+                <p className={`text-2xl font-thin ${daysRemaining < 30 ? 'text-red-400' : 'text-white'}`}>
+                  {daysRemaining > 0 ? daysRemaining : 0}
+                </p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-extralight">
+                  {daysRemaining === 1 ? 'Day Remaining' : 'Days Remaining'}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Key Metrics */}
         <section>
           <h2 className="text-xs uppercase tracking-[0.3em] text-white/60 mb-6 font-light">

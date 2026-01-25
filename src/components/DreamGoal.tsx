@@ -31,6 +31,7 @@ const DreamGoal = () => {
     depositDays,
     switchProject,
     createProject,
+    updateProject,
     deleteProject,
     updateProjectImage,
     addDeposit,
@@ -108,6 +109,7 @@ const DreamGoal = () => {
           onSwitchProject={switchProject}
           onCreateProject={createProject}
           onDeleteProject={deleteProject}
+          onUpdateProject={updateProject}
         />
         
         <h1 className="text-xs uppercase tracking-[0.5em] text-muted-foreground font-extralight">
