@@ -12,6 +12,8 @@ import {
 } from '@/components/ui/sheet';
 import { Project, PROJECT_COLORS, ProjectColor } from '@/types/project';
 import CreateProjectDialog from './CreateProjectDialog';
+import EditProjectDialog from './EditProjectDialog';
+import { useLongPress } from '@/hooks/useLongPress';
 
 interface ProjectSelectorProps {
   projects: Project[];
@@ -19,7 +21,97 @@ interface ProjectSelectorProps {
   onSwitchProject: (projectId: string) => void;
   onCreateProject: (name: string, targetAmount: number, color: ProjectColor, palierValue?: number) => Project;
   onDeleteProject: (projectId: string) => void;
+  onUpdateProject: (projectId: string, updates: Partial<Omit<Project, 'id' | 'createdAt'>>) => void;
 }
+
+interface ProjectItemProps {
+  project: Project;
+  isActive: boolean;
+  projectsCount: number;
+  onSelect: () => void;
+  onViewProgress: (e: React.MouseEvent) => void;
+  onDelete: (e: React.MouseEvent) => void;
+  onLongPress: () => void;
+}
+
+const ProjectItem = ({
+  project,
+  isActive,
+  projectsCount,
+  onSelect,
+  onViewProgress,
+  onDelete,
+  onLongPress,
+}: ProjectItemProps) => {
+  const colorConfig = PROJECT_COLORS[project.color];
+  
+  const { isPressed, progress, handlers } = useLongPress({
+    onLongPress,
+    delay: 3000,
+  });
+
+  return (
+    <button
+      onClick={onSelect}
+      {...handlers}
+      className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-300 text-left group relative overflow-hidden ${
+        isActive 
+          ? 'bg-card border border-border/50' 
+          : 'hover:bg-card/50'
+      }`}
+    >
+      {/* Long press progress indicator */}
+      {isPressed && (
+        <div 
+          className="absolute inset-0 bg-white/5 transition-all duration-75"
+          style={{ width: `${progress}%` }}
+        />
+      )}
+      
+      <div
+        className="w-3 h-3 rounded-full flex-shrink-0 relative z-10"
+        style={{ backgroundColor: `hsl(${colorConfig.hsl})` }}
+      />
+      <div className="flex-1 min-w-0 relative z-10">
+        <p className="text-sm font-light text-foreground truncate">
+          {project.name}
+        </p>
+        <p className="text-xs text-muted-foreground font-extralight">
+          €{project.targetAmount.toLocaleString('de-DE')}
+        </p>
+      </div>
+      <div className="flex items-center gap-1 flex-shrink-0 relative z-10">
+        <button
+          onClick={onViewProgress}
+          className="p-1.5 hover:bg-white/10 rounded transition-opacity"
+          title="View Progress"
+        >
+          <BarChart3 className="w-4 h-4 text-muted-foreground hover:text-foreground" strokeWidth={1.5} />
+        </button>
+        {isActive && (
+          <Check className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+        )}
+        {!isActive && projectsCount > 1 && (
+          <button
+            onClick={onDelete}
+            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-destructive/20 rounded"
+          >
+            <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth={1.5} />
+          </button>
+        )}
+      </div>
+      
+      {/* Long press hint */}
+      {isPressed && (
+        <div className="absolute bottom-1 left-0 right-0 text-center z-10">
+          <span className="text-[9px] text-white/40 uppercase tracking-wider">
+            Hold to edit...
+          </span>
+        </div>
+      )}
+    </button>
+  );
+};
 
 const ProjectSelector = ({
   projects,
@@ -27,10 +119,12 @@ const ProjectSelector = ({
   onSwitchProject,
   onCreateProject,
   onDeleteProject,
+  onUpdateProject,
 }: ProjectSelectorProps) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   const handleSelectProject = (projectId: string) => {
     onSwitchProject(projectId);
@@ -56,6 +150,10 @@ const ProjectSelector = ({
     }
   };
 
+  const handleLongPress = (project: Project) => {
+    setEditingProject(project);
+  };
+
   return (
     <>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -79,56 +177,25 @@ const ProjectSelector = ({
             </SheetDescription>
           </SheetHeader>
 
-          <div className="mt-6 space-y-2">
-            {projects.map((project) => {
-              const colorConfig = PROJECT_COLORS[project.color];
-              const isActive = project.id === activeProjectId;
-              
-              return (
-                <button
-                  key={project.id}
-                  onClick={() => handleSelectProject(project.id)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-300 text-left group ${
-                    isActive 
-                      ? 'bg-card border border-border/50' 
-                      : 'hover:bg-card/50'
-                  }`}
-                >
-                  <div
-                    className="w-3 h-3 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: `hsl(${colorConfig.hsl})` }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-light text-foreground truncate">
-                      {project.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground font-extralight">
-                      {project.targetAmount.toLocaleString('fr-FR')}€
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
-                    <button
-                      onClick={(e) => handleViewProgress(e, project.id)}
-                      className="p-1.5 hover:bg-white/10 rounded transition-opacity"
-                      title="View Progress"
-                    >
-                      <BarChart3 className="w-4 h-4 text-muted-foreground hover:text-foreground" strokeWidth={1.5} />
-                    </button>
-                    {isActive && (
-                      <Check className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-                    )}
-                    {!isActive && projects.length > 1 && (
-                      <button
-                        onClick={(e) => handleDeleteProject(e, project.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-destructive/20 rounded"
-                      >
-                        <Trash2 className="w-3 h-3 text-muted-foreground hover:text-destructive" strokeWidth={1.5} />
-                      </button>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
+          <div className="mt-4 mb-2">
+            <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider text-center">
+              Long press to edit project
+            </p>
+          </div>
+
+          <div className="mt-2 space-y-2">
+            {projects.map((project) => (
+              <ProjectItem
+                key={project.id}
+                project={project}
+                isActive={project.id === activeProjectId}
+                projectsCount={projects.length}
+                onSelect={() => handleSelectProject(project.id)}
+                onViewProgress={(e) => handleViewProgress(e, project.id)}
+                onDelete={(e) => handleDeleteProject(e, project.id)}
+                onLongPress={() => handleLongPress(project)}
+              />
+            ))}
           </div>
 
           <div className="mt-6">
@@ -149,6 +216,15 @@ const ProjectSelector = ({
         onClose={() => setIsCreateOpen(false)}
         onCreate={handleCreateProject}
       />
+
+      {editingProject && (
+        <EditProjectDialog
+          isOpen={!!editingProject}
+          onClose={() => setEditingProject(null)}
+          project={editingProject}
+          onSave={onUpdateProject}
+        />
+      )}
     </>
   );
 };
