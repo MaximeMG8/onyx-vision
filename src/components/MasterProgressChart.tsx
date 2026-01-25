@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   ResponsiveContainer,
   Tooltip,
   Legend,
+  ReferenceLine,
 } from 'recharts';
 import { Project, ProjectDeposit, PROJECT_COLORS } from '@/types/project';
 
@@ -78,12 +79,19 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-black border border-white/20 px-4 py-3 rounded">
-          <p className="text-white text-sm font-medium mb-2">{label}</p>
+        <div className="bg-black/90 backdrop-blur-sm border border-white/10 px-4 py-3 rounded-sm shadow-2xl">
+          <p className="text-white/60 text-xs font-light tracking-widest mb-2 uppercase">{label}</p>
           {payload.map((entry: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: €{entry.value?.toLocaleString('de-DE') || 0}
-            </p>
+            <div key={index} className="flex items-center gap-2 py-0.5">
+              <div 
+                className="w-2 h-2 rounded-full" 
+                style={{ backgroundColor: entry.color }}
+              />
+              <span className="text-white/50 text-xs font-light">{entry.name}:</span>
+              <span className="text-white text-xs font-medium tracking-wide">
+                €{entry.value?.toLocaleString('de-DE') || 0}
+              </span>
+            </div>
           ))}
         </div>
       );
@@ -91,8 +99,28 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
     return null;
   };
 
-  const getLineColor = (project: Project, index: number): string => {
-    // Use project color or fallback to white/grey variations
+  const CustomLegend = ({ payload }: any) => {
+    return (
+      <div className="flex items-center justify-end gap-6 pr-4">
+        {payload?.map((entry: any, index: number) => (
+          <div key={index} className="flex items-center gap-2">
+            <div 
+              className="w-2 h-2 rounded-full" 
+              style={{ 
+                backgroundColor: entry.color,
+                boxShadow: entry.value === 'Global Wealth' ? '0 0 6px rgba(255,255,255,0.5)' : 'none'
+              }}
+            />
+            <span className="text-white/50 text-[10px] font-light tracking-wider uppercase">
+              {entry.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const getLineColor = (project: Project): string => {
     if (project.color === 'white') return '#FFFFFF';
     if (project.color === 'red') return '#EF4444';
     if (project.color === 'blue') return '#3B82F6';
@@ -100,6 +128,10 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
     if (project.color === 'green') return '#22C55E';
     if (project.color === 'purple') return '#A855F7';
     return '#FFFFFF';
+  };
+
+  const getGradientId = (project: Project): string => {
+    return `gradient-${project.id}`;
   };
 
   if (chartData.length === 0) {
@@ -113,57 +145,98 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
   return (
     <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+        <AreaChart data={chartData} margin={{ top: 30, right: 30, left: 20, bottom: 20 }}>
+          <defs>
+            {/* Gradient for each project */}
+            {projects.map((project) => {
+              const color = getLineColor(project);
+              return (
+                <linearGradient key={getGradientId(project)} id={getGradientId(project)} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={color} stopOpacity={0.25} />
+                  <stop offset="50%" stopColor={color} stopOpacity={0.08} />
+                  <stop offset="100%" stopColor={color} stopOpacity={0} />
+                </linearGradient>
+              );
+            })}
+            {/* Gradient for total */}
+            <linearGradient id="gradient-total" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.35} />
+              <stop offset="40%" stopColor="#FFFFFF" stopOpacity={0.12} />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+
           <XAxis
             dataKey="date"
-            axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+            axisLine={false}
             tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: 300 }}
+            tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 10, fontWeight: 300 }}
             dy={10}
           />
           <YAxis
-            axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+            axisLine={false}
             tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 11, fontWeight: 300 }}
+            tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 10, fontWeight: 300 }}
             tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
             dx={-10}
           />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend 
-            wrapperStyle={{ 
-              paddingTop: '20px',
-              fontSize: '12px',
-              fontWeight: 300,
+          
+          <Tooltip 
+            content={<CustomTooltip />} 
+            cursor={{ 
+              stroke: 'rgba(255,255,255,0.15)', 
+              strokeWidth: 1,
+              strokeDasharray: '4 4'
             }}
-            formatter={(value) => <span style={{ color: 'rgba(255,255,255,0.7)' }}>{value}</span>}
           />
           
-          {/* Individual project lines */}
-          {projects.map((project, index) => (
-            <Line
+          <Legend 
+            content={<CustomLegend />}
+            verticalAlign="top"
+            align="right"
+            wrapperStyle={{ 
+              paddingBottom: '15px',
+            }}
+          />
+          
+          {/* Individual project areas */}
+          {projects.map((project) => (
+            <Area
               key={project.id}
               type="monotone"
               dataKey={project.id}
               name={project.name}
-              stroke={getLineColor(project, index)}
+              stroke={getLineColor(project)}
               strokeWidth={1.5}
-              dot={{ fill: getLineColor(project, index), r: 3, strokeWidth: 0 }}
-              activeDot={{ r: 5, strokeWidth: 0 }}
+              fill={`url(#${getGradientId(project)})`}
+              dot={false}
+              activeDot={{ 
+                r: 4, 
+                strokeWidth: 0, 
+                fill: getLineColor(project),
+                style: { filter: `drop-shadow(0 0 4px ${getLineColor(project)})` }
+              }}
             />
           ))}
           
-          {/* Total portfolio line - dashed */}
-          <Line
+          {/* Total portfolio area - dashed */}
+          <Area
             type="monotone"
             dataKey="total"
             name="Global Wealth"
             stroke="#FFFFFF"
-            strokeWidth={2.5}
-            strokeDasharray="8 4"
-            dot={{ fill: '#FFFFFF', r: 4, strokeWidth: 0 }}
-            activeDot={{ r: 6, strokeWidth: 0 }}
+            strokeWidth={2}
+            strokeDasharray="6 3"
+            fill="url(#gradient-total)"
+            dot={false}
+            activeDot={{ 
+              r: 5, 
+              strokeWidth: 0, 
+              fill: '#FFFFFF',
+              style: { filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.8))' }
+            }}
           />
-        </LineChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
