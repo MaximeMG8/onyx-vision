@@ -67,10 +67,10 @@ const MasterAnalytics = () => {
               <div className="flex justify-center mb-3">
                 <Target size={20} strokeWidth={1} className="text-white/60" />
               </div>
-              <p className="text-2xl font-extralight mb-1">
+              <p className="text-3xl font-thin mb-1">
                 {overallProgress.toFixed(1)}%
               </p>
-              <p className="text-white/50 text-xs font-light tracking-wide uppercase">
+              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
                 Overall Progress
               </p>
             </div>
@@ -79,10 +79,10 @@ const MasterAnalytics = () => {
               <div className="flex justify-center mb-3">
                 <TrendingUp size={20} strokeWidth={1} className="text-white/60" />
               </div>
-              <p className="text-2xl font-extralight mb-1">
+              <p className="text-3xl font-thin mb-1">
                 {totalMilestones}
               </p>
-              <p className="text-white/50 text-xs font-light tracking-wide uppercase">
+              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
                 Total Milestones
               </p>
             </div>
@@ -91,10 +91,10 @@ const MasterAnalytics = () => {
               <div className="flex justify-center mb-3">
                 <Wallet size={20} strokeWidth={1} className="text-white/60" />
               </div>
-              <p className="text-2xl font-extralight mb-1">
+              <p className="text-3xl font-thin mb-1">
                 {projects.length}
               </p>
-              <p className="text-white/50 text-xs font-light tracking-wide uppercase">
+              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
                 Active Projects
               </p>
             </div>
@@ -132,7 +132,7 @@ const MasterAnalytics = () => {
                           project.color === 'red' ? '#EF4444' :
                           project.color === 'blue' ? '#3B82F6' :
                           project.color === 'yellow' ? '#EAB308' :
-                          project.color === 'green' ? '#22C55E' :
+                          project.color === 'green' ? '#10B981' :
                           project.color === 'purple' ? '#A855F7' : '#FFFFFF'
                       }}
                     />

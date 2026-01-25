@@ -19,12 +19,12 @@ export interface ProjectDeposit {
 }
 
 export const PROJECT_COLORS: Record<ProjectColor, { label: string; hsl: string }> = {
-  white: { label: 'Blanc', hsl: '0 0% 100%' },
-  red: { label: 'Rouge', hsl: '0 72% 51%' },
-  blue: { label: 'Bleu', hsl: '217 91% 60%' },
-  yellow: { label: 'Jaune', hsl: '48 96% 53%' },
-  green: { label: 'Vert', hsl: '142 71% 45%' },
-  purple: { label: 'Violet', hsl: '271 81% 56%' },
+  white: { label: 'White', hsl: '0 0% 100%' },
+  red: { label: 'Red', hsl: '0 72% 51%' },
+  blue: { label: 'Blue', hsl: '217 91% 60%' },
+  yellow: { label: 'Yellow', hsl: '48 96% 53%' },
+  green: { label: 'Emerald', hsl: '160 84% 39%' },
+  purple: { label: 'Purple', hsl: '271 81% 56%' },
 };
 
 export const getDefaultProject = (): Project => ({
