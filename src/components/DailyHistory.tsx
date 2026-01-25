@@ -28,11 +28,11 @@ const DailyHistory = ({ deposits, palierValue }: DailyHistoryProps) => {
     yesterday.setDate(yesterday.getDate() - 1);
 
     if (dateStr === today.toISOString().split('T')[0]) {
-      return "Aujourd'hui";
+      return "Today";
     } else if (dateStr === yesterday.toISOString().split('T')[0]) {
-      return "Hier";
+      return "Yesterday";
     } else {
-      return date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric' });
+      return date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' });
     }
   };
 
@@ -45,7 +45,7 @@ const DailyHistory = ({ deposits, palierValue }: DailyHistoryProps) => {
   if (sortedDates.length === 0) {
     return (
       <div className="text-center text-muted-foreground text-xs font-extralight tracking-wide">
-        Aucun historique
+        No history yet
       </div>
     );
   }
@@ -53,7 +53,7 @@ const DailyHistory = ({ deposits, palierValue }: DailyHistoryProps) => {
   return (
     <div className="w-full space-y-2">
       <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight text-center mb-3">
-        Historique
+        History
       </h3>
       <div className="space-y-1">
         {sortedDates.map((date) => {
@@ -66,8 +66,8 @@ const DailyHistory = ({ deposits, palierValue }: DailyHistoryProps) => {
               <span className="text-sm font-extralight text-foreground/80">
                 {formatDate(date)}
               </span>
-              <span className="text-sm font-light text-luxury-gold">
-                +{paliers} palier{paliers > 1 ? 's' : ''}
+              <span className="text-sm font-extralight text-foreground/90">
+                +{paliers} milestone{paliers > 1 ? 's' : ''}
               </span>
             </div>
           );

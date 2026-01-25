@@ -63,19 +63,19 @@ const ProjectSelector = ({
           <Button
             variant="ghost"
             size="sm"
-            className="text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground hover:bg-transparent font-extralight"
+            className="text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground hover:bg-transparent font-extralight"
           >
             <FolderOpen className="w-4 h-4 mr-2" strokeWidth={1.5} />
-            Mes Projets
+            My Portfolio
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="bg-background border-border/30 w-80">
           <SheetHeader className="text-left">
             <SheetTitle className="text-foreground font-light tracking-wide">
-              Mes Projets
+              My Portfolio
             </SheetTitle>
             <SheetDescription className="text-muted-foreground font-extralight">
-              Sélectionnez un projet ou créez-en un nouveau
+              Select a project or create a new one
             </SheetDescription>
           </SheetHeader>
 
@@ -135,10 +135,10 @@ const ProjectSelector = ({
             <Button
               variant="outline"
               onClick={() => setIsCreateOpen(true)}
-              className="w-full border-border/30 hover:bg-card font-light"
+              className="w-full border-border/30 hover:bg-card font-extralight"
             >
               <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} />
-              Nouveau Projet
+              New Project
             </Button>
           </div>
         </SheetContent>

@@ -44,8 +44,8 @@ const DreamGoal = () => {
     const deposit = addDeposit(amount);
     if (deposit) {
       toast({
-        title: "Bravo ! 🎉",
-        description: `+${count} palier${count > 1 ? 's' : ''} (${amount}€) ajouté${count > 1 ? 's' : ''} !`,
+        title: "Well done! 🎉",
+        description: `+${count} milestone${count > 1 ? 's' : ''} (€${amount}) added!`,
         duration: 3000,
       });
     }
@@ -56,8 +56,8 @@ const DreamGoal = () => {
     if (recentDeposits.length > 0) {
       removeDeposit(recentDeposits[0].id);
       toast({
-        title: "Correction effectuée",
-        description: "Dernier dépôt supprimé",
+        title: "Correction made",
+        description: "Last deposit removed",
         duration: 3000,
       });
     }
@@ -82,7 +82,7 @@ const DreamGoal = () => {
   if (!isLoaded || !activeProject) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground font-extralight">Chargement...</div>
+        <div className="text-muted-foreground font-extralight">Loading...</div>
       </div>
     );
   }
@@ -159,7 +159,7 @@ const DreamGoal = () => {
           </span>
         </div>
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight mt-2">
-          paliers franchis
+          milestones achieved
         </p>
       </div>
 

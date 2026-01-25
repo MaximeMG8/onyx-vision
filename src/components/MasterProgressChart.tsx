@@ -125,7 +125,7 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
     if (project.color === 'red') return '#EF4444';
     if (project.color === 'blue') return '#3B82F6';
     if (project.color === 'yellow') return '#EAB308';
-    if (project.color === 'green') return '#22C55E';
+    if (project.color === 'green') return '#10B981'; // Emerald green
     if (project.color === 'purple') return '#A855F7';
     return '#FFFFFF';
   };

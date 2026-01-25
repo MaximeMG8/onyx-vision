@@ -77,32 +77,32 @@ const ProjectDashboard = () => {
           </h2>
           
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-center">
-              <Target className="w-5 h-5 mx-auto mb-2 text-white/60" strokeWidth={1.5} />
-              <p className="text-2xl font-extralight text-white mb-1">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-5 text-center">
+              <Target className="w-5 h-5 mx-auto mb-3 text-white/60" strokeWidth={1.5} />
+              <p className="text-3xl font-thin text-white mb-1">
                 {totalMilestones}
               </p>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-extralight">
                 Milestones
               </p>
             </div>
             
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-center">
-              <TrendingUp className="w-5 h-5 mx-auto mb-2 text-white/60" strokeWidth={1.5} />
-              <p className="text-2xl font-extralight text-white mb-1">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-5 text-center">
+              <TrendingUp className="w-5 h-5 mx-auto mb-3 text-white/60" strokeWidth={1.5} />
+              <p className="text-3xl font-thin text-white mb-1">
                 {percentageToGoal.toFixed(1)}%
               </p>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-extralight">
                 Progress
               </p>
             </div>
             
-            <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-center">
-              <Wallet className="w-5 h-5 mx-auto mb-2 text-white/60" strokeWidth={1.5} />
-              <p className="text-2xl font-extralight text-white mb-1">
+            <div className="bg-white/5 border border-white/10 rounded-lg p-5 text-center">
+              <Wallet className="w-5 h-5 mx-auto mb-3 text-white/60" strokeWidth={1.5} />
+              <p className="text-3xl font-thin text-white mb-1">
                 €{remainingBalance.toLocaleString('de-DE')}
               </p>
-              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-extralight">
                 Remaining
               </p>
             </div>

@@ -70,7 +70,7 @@ const ProgressChart = ({ deposits, targetAmount }: ProgressChartProps) => {
   return (
     <div className="h-48 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 20, left: 0, bottom: 10 }}>
           <defs>
             <linearGradient id="progressGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="white" stopOpacity={0.3} />
@@ -81,14 +81,15 @@ const ProgressChart = ({ deposits, targetAmount }: ProgressChartProps) => {
             dataKey="date"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: 200 }}
             dy={10}
           />
           <YAxis
             axisLine={false}
             tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10 }}
+            tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: 200 }}
             tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
+            width={45}
           />
           <Tooltip content={<CustomTooltip />} />
           <Area
