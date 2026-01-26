@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Target, TrendingUp, Wallet } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Target, Wallet } from 'lucide-react';
 import { useProjectManager } from '@/hooks/useProjectManager';
 import MasterProgressChart from '@/components/MasterProgressChart';
-import HorizontalKPIBar from '@/components/HorizontalKPIBar';
 
 const MasterAnalytics = () => {
   const navigate = useNavigate();
@@ -37,122 +36,119 @@ const MasterAnalytics = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="px-6 py-6">
+      <div className="px-6 py-8">
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-6"
+          className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-8"
         >
           <ArrowLeft size={18} strokeWidth={1.5} />
           <span className="text-sm font-light tracking-wide">Back</span>
         </button>
 
         {/* Title */}
-        <h1 className="text-center text-lg font-extralight tracking-[0.3em] text-white mb-8">
-          MASTER ANALYTICS
+        <h1 className="text-center text-xl font-light tracking-[0.3em] text-white mb-12">
+          MASTER PROGRESS ANALYTICS
         </h1>
 
-        {/* Hero KPI - Portfolio Value */}
-        <div className="text-center mb-8">
-          <p className="text-5xl font-thin tracking-wide">
-            €{totalPortfolioValue.toLocaleString('de-DE')}
-          </p>
-          <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-extralight mt-2">
-            Total Portfolio Value
-          </p>
+        {/* Portfolio Summary */}
+        <div className="max-w-4xl mx-auto mb-12">
+          <div className="text-center mb-8">
+            <p className="text-white/50 text-xs font-light tracking-[0.2em] uppercase mb-2">
+              Total Portfolio Value
+            </p>
+            <p className="text-4xl font-extralight tracking-wide">
+              €{totalPortfolioValue.toLocaleString('de-DE')}
+            </p>
+          </div>
+
+          {/* Key Metrics */}
+          <div className="grid grid-cols-3 gap-6">
+            <div className="border border-white/10 rounded-lg p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <Target size={20} strokeWidth={1} className="text-white/60" />
+              </div>
+              <p className="text-3xl font-thin mb-1">
+                {overallProgress.toFixed(1)}%
+              </p>
+              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
+                Overall Progress
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-lg p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <TrendingUp size={20} strokeWidth={1} className="text-white/60" />
+              </div>
+              <p className="text-3xl font-thin mb-1">
+                {totalMilestones}
+              </p>
+              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
+                Total Milestones
+              </p>
+            </div>
+
+            <div className="border border-white/10 rounded-lg p-6 text-center">
+              <div className="flex justify-center mb-3">
+                <Wallet size={20} strokeWidth={1} className="text-white/60" />
+              </div>
+              <p className="text-3xl font-thin mb-1">
+                {projects.length}
+              </p>
+              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
+                Active Projects
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* Horizontal KPI Bars */}
-        <div className="max-w-2xl mx-auto space-y-5 mb-10">
-          <HorizontalKPIBar
-            label="Overall Progress"
-            value={overallProgress}
-            maxValue={100}
-            displayValue={`${overallProgress.toFixed(1)}%`}
-            accentColor="#FFFFFF"
-          />
-          <HorizontalKPIBar
-            label="Total Milestones"
-            value={totalMilestones}
-            maxValue={totalMilestones + 10}
-            displayValue={`${totalMilestones}`}
-            accentColor="#FFFFFF"
-          />
-          <HorizontalKPIBar
-            label="Active Projects"
-            value={projects.length}
-            maxValue={projects.length + 2}
-            displayValue={`${projects.length}`}
-          />
-        </div>
-
-        {/* Master Chart - Full Width */}
-        <div className="w-full mb-8">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-extralight mb-4 text-center">
-            All Projects — Growth Timeline
-          </p>
-          <div className="border border-white/5 rounded-lg p-4 bg-white/[0.01]">
+        {/* Master Chart */}
+        <div className="max-w-5xl mx-auto">
+          <div className="border border-white/10 rounded-lg p-6">
+            <h2 className="text-sm font-light tracking-[0.2em] text-white/70 uppercase mb-6 text-center">
+              Growth Chart — All Projects
+            </h2>
             <MasterProgressChart projects={projects} allDeposits={allDeposits} />
           </div>
         </div>
 
-        {/* Project Legend / Breakdown */}
-        <div className="max-w-3xl mx-auto">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 font-extralight mb-4 text-center">
-            Project Breakdown
-          </p>
-          <div className="space-y-3">
-            {projects.map(project => {
-              const projectDeposits = allDeposits.filter(d => d.projectId === project.id);
-              const projectTotal = projectDeposits.reduce((s, d) => s + d.amount, 0);
-              const projectProgress = (projectTotal / project.targetAmount) * 100;
-              
-              const getColorHex = () => {
-                switch (project.color) {
-                  case 'green': return '#10B981';
-                  case 'red': return '#EF4444';
-                  case 'blue': return '#3B82F6';
-                  case 'yellow': return '#EAB308';
-                  case 'purple': return '#A855F7';
-                  default: return '#FFFFFF';
-                }
-              };
-              
-              return (
-                <div 
-                  key={project.id} 
-                  className="flex items-center gap-4 p-4 border border-white/5 rounded-lg bg-white/[0.01]"
-                >
-                  <div 
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ 
-                      backgroundColor: getColorHex(),
-                      boxShadow: `0 0 8px ${getColorHex()}40`
-                    }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline justify-between mb-1">
+        {/* Project Legend */}
+        <div className="max-w-4xl mx-auto mt-8">
+          <div className="border border-white/10 rounded-lg p-6">
+            <h3 className="text-xs font-light tracking-[0.2em] text-white/50 uppercase mb-4 text-center">
+              Project Breakdown
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {projects.map(project => {
+                const projectDeposits = allDeposits.filter(d => d.projectId === project.id);
+                const projectTotal = projectDeposits.reduce((s, d) => s + d.amount, 0);
+                const projectProgress = (projectTotal / project.targetAmount) * 100;
+                
+                return (
+                  <div key={project.id} className="flex items-center gap-3 p-3 border border-white/5 rounded">
+                    <div 
+                      className="w-3 h-3 rounded-full"
+                      style={{ 
+                        backgroundColor: project.color === 'white' ? '#FFFFFF' :
+                          project.color === 'red' ? '#EF4444' :
+                          project.color === 'blue' ? '#3B82F6' :
+                          project.color === 'yellow' ? '#EAB308' :
+                          project.color === 'green' ? '#10B981' :
+                          project.color === 'purple' ? '#A855F7' : '#FFFFFF'
+                      }}
+                    />
+                    <div className="flex-1 min-w-0">
                       <p className="text-sm font-light text-white truncate">{project.name}</p>
-                      <p className="text-sm font-thin text-white/60 ml-2">
-                        {projectProgress.toFixed(0)}%
+                      <p className="text-xs text-white/40">
+                        €{projectTotal.toLocaleString('de-DE')} / €{project.targetAmount.toLocaleString('de-DE')}
                       </p>
                     </div>
-                    <div className="relative h-[2px] bg-white/10 rounded-full overflow-hidden">
-                      <div 
-                        className="absolute inset-y-0 left-0 rounded-full transition-all duration-500"
-                        style={{ 
-                          width: `${Math.min(projectProgress, 100)}%`,
-                          backgroundColor: getColorHex(),
-                          boxShadow: `0 0 6px ${getColorHex()}40`
-                        }}
-                      />
-                    </div>
-                    <p className="text-[10px] text-white/30 font-extralight mt-1">
-                      €{projectTotal.toLocaleString('de-DE')} / €{project.targetAmount.toLocaleString('de-DE')}
+                    <p className="text-sm font-light text-white/60">
+                      {projectProgress.toFixed(0)}%
                     </p>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

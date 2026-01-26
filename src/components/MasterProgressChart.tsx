@@ -136,14 +136,14 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
 
   if (chartData.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center">
-        <p className="text-white/30 text-sm font-extralight tracking-widest uppercase">No data available</p>
+      <div className="h-80 flex items-center justify-center">
+        <p className="text-white/40 text-sm font-light tracking-wide">NO DATA AVAILABLE</p>
       </div>
     );
   }
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={chartData} margin={{ top: 30, right: 30, left: 20, bottom: 20 }}>
           <defs>
