@@ -55,82 +55,97 @@ const MasterAnalytics = () => {
             </p>
           </div>
 
-          {/* Key Metrics */}
-          <div className="grid grid-cols-3 gap-6">
-            <div className="border rounded-lg p-6 text-center border-primary">
-              <div className="flex justify-center mb-3">
-                <Target size={20} strokeWidth={1} className="text-white/60" />
+        {/* Key Metrics - Compact */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="border border-white/10 p-4 text-center">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Target size={14} strokeWidth={1} className="text-white/40" />
+                <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
+                  Overall
+                </p>
               </div>
-              <p className="text-3xl font-thin mb-1">
+              <p className="text-2xl font-thin">
                 {overallProgress.toFixed(1)}%
               </p>
-              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
-                Overall Progress
-              </p>
             </div>
 
-            <div className="border rounded-lg p-6 text-center border-primary">
-              <div className="flex justify-center mb-3">
-                <TrendingUp size={20} strokeWidth={1} className="text-white/60" />
+            <div className="border border-white/10 p-4 text-center">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <TrendingUp size={14} strokeWidth={1} className="text-white/40" />
+                <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
+                  Milestones
+                </p>
               </div>
-              <p className="text-3xl font-thin mb-1">
+              <p className="text-2xl font-thin">
                 {totalMilestones}
               </p>
-              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
-                Total Milestones
-              </p>
             </div>
 
-            <div className="border rounded-lg p-6 text-center border-primary">
-              <div className="flex justify-center mb-3">
-                <Wallet size={20} strokeWidth={1} className="text-white/60" />
+            <div className="border border-white/10 p-4 text-center">
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <Wallet size={14} strokeWidth={1} className="text-white/40" />
+                <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
+                  Active
+                </p>
               </div>
-              <p className="text-3xl font-thin mb-1">
+              <p className="text-2xl font-thin">
                 {projects.length}
               </p>
-              <p className="text-white/50 text-xs font-extralight tracking-wide uppercase">
-                Active Projects
-              </p>
             </div>
           </div>
         </div>
 
-        {/* Master Chart */}
-        <div className="max-w-5xl mx-auto">
-          <div className="rounded-lg p-6 border-destructive-foreground border-4 py-[2px]">
-            <h2 className="text-sm font-light tracking-[0.2em] text-white/70 uppercase mb-6 text-center">
-              Growth Chart — All Projects
-            </h2>
-            <MasterProgressChart projects={projects} allDeposits={allDeposits} />
+        {/* Master Chart - Full Width Sharp Rectangle */}
+        <div className="w-full px-6">
+          <div className="border border-white/10 bg-black">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+              <h2 className="text-[11px] font-light tracking-[0.25em] text-white/50 uppercase">
+                Growth Chart
+              </h2>
+            </div>
+            <div className="p-4">
+              <MasterProgressChart projects={projects} allDeposits={allDeposits} />
+            </div>
           </div>
         </div>
 
-        {/* Project Legend */}
-        <div className="max-w-4xl mx-auto mt-8">
-          <div className="border rounded-lg p-6 border-muted-foreground">
-            <h3 className="text-xs font-light tracking-[0.2em] text-white/50 uppercase mb-4 text-center">
-              Project Breakdown
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {/* Project Breakdown - Minimal */}
+        <div className="w-full px-6 mt-6">
+          <div className="border border-white/10">
+            <div className="px-6 py-3 border-b border-white/5">
+              <h3 className="text-[10px] font-light tracking-[0.25em] text-white/40 uppercase">
+                Portfolio Breakdown
+              </h3>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 divide-x divide-white/5">
               {projects.map(project => {
-              const projectDeposits = allDeposits.filter(d => d.projectId === project.id);
-              const projectTotal = projectDeposits.reduce((s, d) => s + d.amount, 0);
-              const projectProgress = projectTotal / project.targetAmount * 100;
-              return <div key={project.id} className="flex items-center gap-3 p-3 border border-white/5 rounded">
-                    <div className="w-3 h-3 rounded-full" style={{
-                  backgroundColor: project.color === 'white' ? '#FFFFFF' : project.color === 'red' ? '#EF4444' : project.color === 'blue' ? '#3B82F6' : project.color === 'yellow' ? '#EAB308' : project.color === 'green' ? '#10B981' : project.color === 'purple' ? '#A855F7' : '#FFFFFF'
-                }} />
+                const projectDeposits = allDeposits.filter(d => d.projectId === project.id);
+                const projectTotal = projectDeposits.reduce((s, d) => s + d.amount, 0);
+                const projectProgress = projectTotal / project.targetAmount * 100;
+                const color = project.color === 'white' ? '#FFFFFF' : 
+                              project.color === 'red' ? '#EF4444' : 
+                              project.color === 'blue' ? '#3B82F6' : 
+                              project.color === 'yellow' ? '#EAB308' : 
+                              project.color === 'green' ? '#10B981' : 
+                              project.color === 'purple' ? '#A855F7' : '#FFFFFF';
+                return (
+                  <div key={project.id} className="p-4 flex items-center gap-3">
+                    <div 
+                      className="w-2 h-2 rounded-full" 
+                      style={{ backgroundColor: color, boxShadow: `0 0 6px ${color}` }} 
+                    />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-light text-white truncate">{project.name}</p>
-                      <p className="text-xs text-white/40">
-                        €{projectTotal.toLocaleString('de-DE')} / €{project.targetAmount.toLocaleString('de-DE')}
+                      <p className="text-xs font-light text-white/80 truncate">{project.name}</p>
+                      <p className="text-[10px] text-white/30 font-light">
+                        €{projectTotal.toLocaleString('de-DE')}
                       </p>
                     </div>
-                    <p className="text-sm font-light text-white/60">
+                    <p className="text-sm font-thin text-white/50">
                       {projectProgress.toFixed(0)}%
                     </p>
-                  </div>;
-            })}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
