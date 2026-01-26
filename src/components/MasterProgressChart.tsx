@@ -101,17 +101,17 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
 
   const CustomLegend = ({ payload }: any) => {
     return (
-      <div className="flex items-center justify-end gap-6 pr-4">
+      <div className="flex items-center gap-4">
         {payload?.map((entry: any, index: number) => (
-          <div key={index} className="flex items-center gap-2">
+          <div key={index} className="flex items-center gap-1.5">
             <div 
-              className="w-2 h-2 rounded-full" 
+              className="w-1.5 h-1.5 rounded-full" 
               style={{ 
                 backgroundColor: entry.color,
-                boxShadow: entry.value === 'Global Wealth' ? '0 0 6px rgba(255,255,255,0.5)' : 'none'
+                boxShadow: `0 0 4px ${entry.color}`
               }}
             />
-            <span className="text-white/50 text-[10px] font-light tracking-wider uppercase">
+            <span className="text-white/40 text-[9px] font-light tracking-wider uppercase">
               {entry.value}
             </span>
           </div>
@@ -143,50 +143,62 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
   }
 
   return (
-    <div className="h-80 w-full">
+    <div className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 30, right: 30, left: 20, bottom: 20 }}>
+        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
           <defs>
-            {/* Gradient for each project */}
+            {/* Gradient for each project with neon glow effect */}
             {projects.map((project) => {
               const color = getLineColor(project);
               return (
                 <linearGradient key={getGradientId(project)} id={getGradientId(project)} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={color} stopOpacity={0.25} />
-                  <stop offset="50%" stopColor={color} stopOpacity={0.08} />
+                  <stop offset="0%" stopColor={color} stopOpacity={0.2} />
+                  <stop offset="60%" stopColor={color} stopOpacity={0.05} />
                   <stop offset="100%" stopColor={color} stopOpacity={0} />
                 </linearGradient>
               );
             })}
-            {/* Gradient for total */}
+            {/* Gradient for total - subtle white glow */}
             <linearGradient id="gradient-total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.35} />
-              <stop offset="40%" stopColor="#FFFFFF" stopOpacity={0.12} />
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.15} />
+              <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.05} />
               <stop offset="100%" stopColor="#FFFFFF" stopOpacity={0} />
             </linearGradient>
+            {/* Glow filters for neon effect */}
+            <filter id="glow-white" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
           </defs>
 
+          {/* Minimal X-axis - just small labels */}
           <XAxis
             dataKey="date"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 10, fontWeight: 300 }}
-            dy={10}
+            tick={{ fill: 'rgba(255,255,255,0.25)', fontSize: 9, fontWeight: 300 }}
+            dy={5}
+            interval="preserveStartEnd"
           />
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tick={{ fill: 'rgba(255,255,255,0.35)', fontSize: 10, fontWeight: 300 }}
-            tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
-            dx={-10}
-          />
+          
+          {/* Y-axis completely hidden */}
+          <YAxis hide />
           
           <Tooltip 
             content={<CustomTooltip />} 
             cursor={{ 
-              stroke: 'rgba(255,255,255,0.15)', 
+              stroke: 'rgba(255,255,255,0.08)', 
               strokeWidth: 1,
-              strokeDasharray: '4 4'
             }}
           />
           
@@ -195,46 +207,45 @@ const MasterProgressChart = ({ projects, allDeposits }: MasterProgressChartProps
             verticalAlign="top"
             align="right"
             wrapperStyle={{ 
-              paddingBottom: '15px',
+              paddingBottom: '10px',
+              paddingRight: '5px',
             }}
           />
           
-          {/* Individual project areas */}
-          {projects.map((project) => (
-            <Area
-              key={project.id}
-              type="monotone"
-              dataKey={project.id}
-              name={project.name}
-              stroke={getLineColor(project)}
-              strokeWidth={1.5}
-              fill={`url(#${getGradientId(project)})`}
-              dot={false}
-              activeDot={{ 
-                r: 4, 
-                strokeWidth: 0, 
-                fill: getLineColor(project),
-                style: { filter: `drop-shadow(0 0 4px ${getLineColor(project)})` }
-              }}
-            />
-          ))}
+          {/* Individual project areas with neon glow */}
+          {projects.map((project) => {
+            const color = getLineColor(project);
+            const isGreen = project.color === 'green';
+            return (
+              <Area
+                key={project.id}
+                type="monotone"
+                dataKey={project.id}
+                name={project.name}
+                stroke={color}
+                strokeWidth={2}
+                fill={`url(#${getGradientId(project)})`}
+                dot={false}
+                activeDot={false}
+                style={{ 
+                  filter: isGreen ? 'url(#glow-green)' : 'url(#glow-white)'
+                }}
+              />
+            );
+          })}
           
-          {/* Total portfolio area - dashed */}
+          {/* Total portfolio area - dashed with glow */}
           <Area
             type="monotone"
             dataKey="total"
             name="Global Wealth"
             stroke="#FFFFFF"
-            strokeWidth={2}
-            strokeDasharray="6 3"
+            strokeWidth={1.5}
+            strokeDasharray="4 2"
             fill="url(#gradient-total)"
             dot={false}
-            activeDot={{ 
-              r: 5, 
-              strokeWidth: 0, 
-              fill: '#FFFFFF',
-              style: { filter: 'drop-shadow(0 0 6px rgba(255,255,255,0.8))' }
-            }}
+            activeDot={false}
+            style={{ filter: 'url(#glow-white)' }}
           />
         </AreaChart>
       </ResponsiveContainer>
