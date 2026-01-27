@@ -96,7 +96,7 @@ const MasterAnalytics = () => {
         </div>
 
         {/* Master Chart - Full Width Sharp Rectangle */}
-        <div className="w-full px-6">
+        <div className="w-full px-0">
           <div className="border border-white/10 bg-black">
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
               <h2 className="text-[11px] font-light tracking-[0.25em] text-white/50 uppercase">
