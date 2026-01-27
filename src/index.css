@@ -113,6 +113,16 @@
   .settings-input::placeholder {
     color: hsl(var(--muted-foreground) / 0.4);
   }
+
+  /* Stealth scrollbar - completely hidden */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer utilities {
