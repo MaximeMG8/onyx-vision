@@ -57,7 +57,7 @@ const MasterAnalytics = () => {
 
         {/* Key Metrics - Compact */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="border border-white/10 p-4 text-center">
+            <div className="border border-white/10 p-4 text-center rounded">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Target size={14} strokeWidth={1} className="text-white/40" />
                 <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
@@ -69,7 +69,7 @@ const MasterAnalytics = () => {
               </p>
             </div>
 
-            <div className="border border-white/10 p-4 text-center">
+            <div className="border border-white/10 p-4 text-center rounded">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <TrendingUp size={14} strokeWidth={1} className="text-white/40" />
                 <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
@@ -81,7 +81,7 @@ const MasterAnalytics = () => {
               </p>
             </div>
 
-            <div className="border border-white/10 p-4 text-center">
+            <div className="border border-white/10 p-4 text-center rounded">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Wallet size={14} strokeWidth={1} className="text-white/40" />
                 <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
@@ -111,7 +111,7 @@ const MasterAnalytics = () => {
 
         {/* Project Breakdown - Minimal */}
         <div className="w-full px-6 mt-6">
-          <div className="border border-white/10">
+          <div className="border border-white/10 rounded">
             <div className="px-6 py-3 border-b border-white/5">
               <h3 className="text-[10px] font-light tracking-[0.25em] text-white/40 uppercase">
                 Portfolio Breakdown
