@@ -54,7 +54,7 @@ const ProjectDashboard = () => {
           <span className="uppercase tracking-[0.2em] font-extralight text-sm">Back</span>
         </Button>
         
-        <h1 className="uppercase tracking-[0.3em] font-extralight text-3xl">
+        <h1 className="uppercase tracking-[0.3em] font-extralight text-3xl text-right">
           {project.name}
         </h1>
         
@@ -84,7 +84,7 @@ const ProjectDashboard = () => {
           </h2>
           
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white/5 border rounded-lg p-5 text-center border-luxury-silver">
+            <div className="bg-white/5 border p-5 text-center border-luxury-silver rounded-xl">
               <Target className="w-5 h-5 mx-auto mb-3 text-white/60" strokeWidth={1.5} />
               <p className="text-3xl font-thin text-white mb-1">
                 {totalMilestones}
@@ -94,7 +94,7 @@ const ProjectDashboard = () => {
               </p>
             </div>
             
-            <div className="bg-white/5 border rounded-lg p-5 text-center border-luxury-silver">
+            <div className="bg-white/5 border p-5 text-center border-luxury-silver mx-0 px-[2px] rounded-xl">
               <TrendingUp className="w-5 h-5 mx-auto mb-3 text-white/60" strokeWidth={1.5} />
               <p className="text-3xl font-thin text-white mb-1">
                 {percentageToGoal.toFixed(1)}%
@@ -104,7 +104,7 @@ const ProjectDashboard = () => {
               </p>
             </div>
             
-            <div className="bg-white/5 border rounded-lg p-5 text-center border-luxury-silver">
+            <div className="bg-white/5 border p-5 text-center border-luxury-silver rounded-xl">
               <Wallet className="w-5 h-5 mx-auto mb-3 text-white/60" strokeWidth={1.5} />
               <p className="text-3xl font-thin text-white mb-1">
                 €{remainingBalance.toLocaleString('de-DE')}
