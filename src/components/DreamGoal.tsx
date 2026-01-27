@@ -90,7 +90,7 @@ const DreamGoal = () => {
       <header className="w-full flex items-center justify-between animate-fade-up">
         <ProjectSelector projects={projects} activeProjectId={activeProjectId} onSwitchProject={switchProject} onCreateProject={createProject} onDeleteProject={deleteProject} onUpdateProject={updateProject} />
         
-        <h1 className="uppercase tracking-[0.5em] text-muted-foreground font-extralight text-sm">
+        <h1 className="uppercase tracking-[0.5em] text-muted-foreground font-extralight text-xs">
           {activeProject.name}
         </h1>
         
