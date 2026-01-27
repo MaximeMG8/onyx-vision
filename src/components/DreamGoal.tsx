@@ -82,31 +82,33 @@ const DreamGoal = () => {
       </div>;
   }
   const displayImage = activeProject.imageUrl || luxuryWatch;
-  return <div className="min-h-screen bg-background flex flex-col items-center py-6 px-6 gap-6">
+  return <div className="min-h-screen bg-background flex flex-col items-center py-6 px-4 gap-6 overflow-x-hidden">
       {/* Hidden file input */}
       <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
 
       {/* Header with Project Selector, History, and Settings */}
-      <header className="w-full flex items-center justify-between animate-fade-up">
-        <ProjectSelector projects={projects} activeProjectId={activeProjectId} onSwitchProject={switchProject} onCreateProject={createProject} onDeleteProject={deleteProject} onUpdateProject={updateProject} />
+      <header className="w-full max-w-full flex items-center justify-between animate-fade-up">
+        <div className="flex-shrink-0">
+          <ProjectSelector projects={projects} activeProjectId={activeProjectId} onSwitchProject={switchProject} onCreateProject={createProject} onDeleteProject={deleteProject} onUpdateProject={updateProject} />
+        </div>
         
-        <h1 className="uppercase tracking-[0.5em] text-muted-foreground font-extralight text-xs">
+        <h1 className="uppercase tracking-[0.3em] text-muted-foreground font-extralight text-xs flex-shrink min-w-0 truncate px-2 max-w-[120px] text-center">
           {activeProject.name}
         </h1>
         
-        <div className="flex items-center gap-1">
-          <button onClick={() => navigate("/master-analytics")} className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Global Analytics">
-            <BarChart2 className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+        <div className="flex items-center gap-0.5 flex-shrink-0">
+          <button onClick={() => navigate("/master-analytics")} className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Global Analytics">
+            <BarChart2 className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
           </button>
           
           <DepositHistory deposits={getRecentDeposits(20)} onRemoveDeposit={removeDeposit}>
-            <button className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Historique">
-              <History className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+            <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Historique">
+              <History className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
             </button>
           </DepositHistory>
           
-          <button onClick={() => navigate("/settings")} className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Paramètres">
-            <Settings className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
+          <button onClick={() => navigate("/settings")} className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Paramètres">
+            <Settings className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
           </button>
         </div>
       </header>
