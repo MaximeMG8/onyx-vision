@@ -44,7 +44,7 @@ const DreamGoal = () => {
     const deposit = addDeposit(amount);
     if (deposit) {
       toast({
-        title: "Well done! 🎉",
+        title: "Well done! ",
         description: `+${count} milestone${count > 1 ? 's' : ''} (€${amount}) added!`,
         duration: 3000
       });
