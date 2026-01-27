@@ -160,11 +160,10 @@ const ProjectSelector = ({
         <SheetTrigger asChild>
           <Button
             variant="ghost"
-            size="sm"
-            className="text-xs uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground hover:bg-transparent font-extralight"
+            size="icon"
+            className="w-9 h-9 text-muted-foreground hover:text-foreground hover:bg-card/50"
           >
-            <FolderOpen className="w-4 h-4 mr-2" strokeWidth={1.5} />
-            My Portfolio
+            <FolderOpen className="w-4 h-4" strokeWidth={1.5} />
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="bg-background border-border/30 w-80">
