@@ -40,7 +40,7 @@ const MasterAnalytics = () => {
         </button>
 
         {/* Title */}
-        <h1 className="text-center text-xl font-light tracking-[0.3em] text-white mb-12">
+        <h1 className="text-center font-light tracking-[0.3em] text-white mb-12 text-base">
           MASTER PROGRESS ANALYTICS
         </h1>
 
@@ -119,21 +119,15 @@ const MasterAnalytics = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 divide-x divide-white/5">
               {projects.map(project => {
-                const projectDeposits = allDeposits.filter(d => d.projectId === project.id);
-                const projectTotal = projectDeposits.reduce((s, d) => s + d.amount, 0);
-                const projectProgress = projectTotal / project.targetAmount * 100;
-                const color = project.color === 'white' ? '#FFFFFF' : 
-                              project.color === 'red' ? '#EF4444' : 
-                              project.color === 'blue' ? '#3B82F6' : 
-                              project.color === 'yellow' ? '#EAB308' : 
-                              project.color === 'green' ? '#10B981' : 
-                              project.color === 'purple' ? '#A855F7' : '#FFFFFF';
-                return (
-                  <div key={project.id} className="p-4 flex items-center gap-3">
-                    <div 
-                      className="w-2 h-2 rounded-full" 
-                      style={{ backgroundColor: color, boxShadow: `0 0 6px ${color}` }} 
-                    />
+              const projectDeposits = allDeposits.filter(d => d.projectId === project.id);
+              const projectTotal = projectDeposits.reduce((s, d) => s + d.amount, 0);
+              const projectProgress = projectTotal / project.targetAmount * 100;
+              const color = project.color === 'white' ? '#FFFFFF' : project.color === 'red' ? '#EF4444' : project.color === 'blue' ? '#3B82F6' : project.color === 'yellow' ? '#EAB308' : project.color === 'green' ? '#10B981' : project.color === 'purple' ? '#A855F7' : '#FFFFFF';
+              return <div key={project.id} className="p-4 flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full" style={{
+                  backgroundColor: color,
+                  boxShadow: `0 0 6px ${color}`
+                }} />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-light text-white/80 truncate">{project.name}</p>
                       <p className="text-[10px] text-white/30 font-light">
@@ -143,9 +137,8 @@ const MasterAnalytics = () => {
                     <p className="text-sm font-thin text-white/50">
                       {projectProgress.toFixed(0)}%
                     </p>
-                  </div>
-                );
-              })}
+                  </div>;
+            })}
             </div>
           </div>
         </div>
