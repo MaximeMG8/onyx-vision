@@ -88,13 +88,15 @@ const DreamGoal = () => {
 
       {/* Header with Project Selector, History, and Settings */}
       <header className="w-full max-w-full flex items-center justify-between animate-fade-up">
-        <div className="flex-shrink-0">
-          <ProjectSelector projects={projects} activeProjectId={activeProjectId} onSwitchProject={switchProject} onCreateProject={createProject} onDeleteProject={deleteProject} onUpdateProject={updateProject} />
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="flex-shrink-0">
+            <ProjectSelector projects={projects} activeProjectId={activeProjectId} onSwitchProject={switchProject} onCreateProject={createProject} onDeleteProject={deleteProject} onUpdateProject={updateProject} />
+          </div>
+          
+          <h1 className="uppercase tracking-[0.25em] text-muted-foreground font-extralight text-sm truncate">
+            {activeProject.name}
+          </h1>
         </div>
-        
-        <h1 className="uppercase tracking-[0.3em] text-muted-foreground font-extralight text-xs flex-shrink min-w-0 truncate px-2 max-w-[120px] text-center">
-          {activeProject.name}
-        </h1>
         
         <div className="flex items-center gap-0.5 flex-shrink-0">
           <button onClick={() => navigate("/master-analytics")} className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Global Analytics">
