@@ -84,7 +84,7 @@ const ProjectDashboard = () => {
           </h2>
           
           <div className="grid grid-cols-3 gap-4">
-            <div className="bg-white/5 border p-5 text-center border-luxury-silver rounded-xl">
+            <div className="bg-white/5 border p-5 text-center border-luxury-silver rounded-xl px-[2px]">
               <Target className="w-5 h-5 mx-auto mb-3 text-white/60" strokeWidth={1.5} />
               <p className="text-3xl font-thin text-white mb-1">
                 {totalMilestones}
