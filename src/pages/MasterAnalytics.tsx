@@ -31,7 +31,7 @@ const MasterAnalytics = () => {
         <p className="text-white/60 text-sm font-light tracking-widest">LOADING...</p>
       </div>;
   }
-  return <div className="min-h-screen bg-black text-white">
+  return <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Header */}
       <div className="px-6 py-8">
         <button onClick={() => navigate('/')} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-8">
