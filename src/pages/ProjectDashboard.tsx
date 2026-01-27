@@ -122,7 +122,7 @@ const ProjectDashboard = () => {
             Analytics — Growth Chart
           </h2>
           
-          <div className="bg-white/5 border-white/10 p-6 rounded border-0">
+          <div className="bg-white/5 border-white/10 p-6 rounded border-0 px-0 py-0">
             <ProgressChart deposits={deposits} targetAmount={project.targetAmount} />
           </div>
         </section>
