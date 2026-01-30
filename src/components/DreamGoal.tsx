@@ -110,7 +110,7 @@ const DreamGoal = () => {
           </DepositHistory>
           
           <button onClick={() => navigate("/settings")} className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Paramètres">
-            <Settings className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+            <Settings className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
           </button>
         </div>
       </header>
