@@ -100,7 +100,7 @@ const DreamGoal = () => {
         
         <div className="flex items-center gap-0.5 flex-shrink-0">
           <button onClick={() => navigate("/master-analytics")} className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Global Analytics">
-            <BarChart2 className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+            <BarChart2 className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
           </button>
           
           <DepositHistory deposits={getRecentDeposits(20)} onRemoveDeposit={removeDeposit}>
