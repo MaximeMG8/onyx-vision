@@ -105,7 +105,7 @@ const DreamGoal = () => {
           
           <DepositHistory deposits={getRecentDeposits(20)} onRemoveDeposit={removeDeposit}>
             <button className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50" aria-label="Historique">
-              <History className="w-4 h-4 text-muted-foreground" strokeWidth={1.5} />
+              <History className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
             </button>
           </DepositHistory>
           
