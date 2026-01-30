@@ -93,7 +93,7 @@ const DreamGoal = () => {
             <ProjectSelector projects={projects} activeProjectId={activeProjectId} onSwitchProject={switchProject} onCreateProject={createProject} onDeleteProject={deleteProject} onUpdateProject={updateProject} />
           </div>
           
-          <h1 className="uppercase tracking-[0.25em] text-muted-foreground text-sm truncate font-bold">
+          <h1 className="uppercase tracking-[0.25em] text-muted-foreground truncate font-bold text-base">
             {activeProject.name}
           </h1>
         </div>
