@@ -159,7 +159,7 @@ const DreamGoal = () => {
         
         {/* Camera button overlay */}
         <button onClick={triggerImageUpload} className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center transition-all duration-300 hover:bg-background hover:scale-110 hover:border-foreground/30" aria-label="Modifier la photo">
-          <Camera className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+          <Camera className="text-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
         </button>
       </div>
 
