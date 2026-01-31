@@ -40,7 +40,7 @@ const MasterAnalytics = () => {
         </button>
 
         {/* Title */}
-        <h1 className="text-center font-light tracking-[0.3em] text-white mb-12 text-base">
+        <h1 className="text-center font-light tracking-[0.3em] text-white mb-12 text-sm">
           MASTER PROGRESS ANALYTICS
         </h1>
 
