@@ -54,7 +54,7 @@ const ProjectDashboard = () => {
           <span className="uppercase tracking-[0.2em] font-extralight text-sm">Back</span>
         </Button>
         
-        <h1 className="uppercase tracking-[0.3em] font-extralight text-3xl text-right">
+        <h1 className="uppercase tracking-[0.3em] font-extralight text-right text-base">
           {project.name}
         </h1>
         
