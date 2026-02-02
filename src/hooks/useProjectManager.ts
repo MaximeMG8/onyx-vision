@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Project, ProjectDeposit, getDefaultProject, PROJECT_COLORS } from '@/types/project';
+import { Project, ProjectDeposit, ProjectImage, getDefaultProject, PROJECT_COLORS, getFavoriteImage, getSortedImages } from '@/types/project';
 
 const PROJECTS_KEY = 'mydream_projects';
 const DEPOSITS_KEY = 'mydream_all_deposits';
@@ -155,12 +155,46 @@ export const useProjectManager = () => {
     return deposits;
   }, [deposits]);
 
-  // Update project image
+  // Update project image (legacy - adds to images array)
   const updateProjectImage = useCallback((imageUrl: string) => {
-    if (activeProjectId) {
-      updateProject(activeProjectId, { imageUrl });
-    }
+    if (!activeProjectId || !activeProject) return;
+    
+    const newImage: ProjectImage = {
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      url: imageUrl,
+      order: activeProject.images?.length || 0,
+      isFavorite: !activeProject.images || activeProject.images.length === 0,
+      uploadedAt: Date.now(),
+    };
+    
+    const existingImages = activeProject.images || [];
+    updateProject(activeProjectId, { 
+      images: [...existingImages, newImage],
+      imageUrl // Keep legacy field updated
+    });
+  }, [activeProjectId, activeProject, updateProject]);
+
+  // Update all images for a project (for gallery manager)
+  const updateProjectImages = useCallback((images: ProjectImage[]) => {
+    if (!activeProjectId) return;
+    
+    const favoriteImage = images.find(img => img.isFavorite);
+    updateProject(activeProjectId, { 
+      images,
+      imageUrl: favoriteImage?.url // Keep legacy field in sync
+    });
   }, [activeProjectId, updateProject]);
+
+  // Get the main display image for a project
+  const getMainImage = useCallback((project: Project): string | undefined => {
+    return getFavoriteImage(project);
+  }, []);
+
+  // Get sorted images for active project
+  const getProjectImages = useCallback((): ProjectImage[] => {
+    if (!activeProject) return [];
+    return getSortedImages(activeProject);
+  }, [activeProject]);
 
   return {
     // State
@@ -189,5 +223,10 @@ export const useProjectManager = () => {
     removeDeposit,
     getRecentDeposits,
     getAllDeposits,
+    
+    // Image gallery actions
+    updateProjectImages,
+    getMainImage,
+    getProjectImages,
   };
 };
