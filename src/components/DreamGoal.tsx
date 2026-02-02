@@ -153,7 +153,7 @@ const DreamGoal = () => {
           width: Math.min(window.innerWidth * 0.52, 250),
           height: Math.min(window.innerWidth * 0.52, 250)
         }}>
-            <img src={displayImage} alt={activeProject.name} className="w-full h-full object-cover grayscale opacity-95" />
+            <img src={displayImage} alt={activeProject.name} className="w-full h-full object-cover" />
           </div>
         </ProgressRing>
         
