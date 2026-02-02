@@ -1,12 +1,21 @@
 export type ProjectColor = 'white' | 'red' | 'blue' | 'yellow' | 'green' | 'purple';
 
+export interface ProjectImage {
+  id: string;
+  url: string;
+  order: number;
+  isFavorite: boolean;
+  uploadedAt: number;
+}
+
 export interface Project {
   id: string;
   name: string;
   targetAmount: number;
   palierValue: number;
   color: ProjectColor;
-  imageUrl?: string;
+  imageUrl?: string; // Legacy - kept for backwards compatibility
+  images?: ProjectImage[]; // New gallery system
   deadline?: string; // ISO date string
   createdAt: number;
 }
@@ -34,5 +43,21 @@ export const getDefaultProject = (): Project => ({
   targetAmount: 10000,
   palierValue: 15,
   color: 'white',
+  images: [],
   createdAt: Date.now(),
 });
+
+// Helper to get the favorite/main image from a project
+export const getFavoriteImage = (project: Project): string | undefined => {
+  if (project.images && project.images.length > 0) {
+    const favorite = project.images.find(img => img.isFavorite);
+    return favorite ? favorite.url : project.images[0].url;
+  }
+  return project.imageUrl;
+};
+
+// Helper to get sorted images
+export const getSortedImages = (project: Project): ProjectImage[] => {
+  if (!project.images) return [];
+  return [...project.images].sort((a, b) => a.order - b.order);
+};

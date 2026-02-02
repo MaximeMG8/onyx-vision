@@ -1,0 +1,370 @@
+import { useRef, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { X, Star, Trash2, Plus, GripVertical } from 'lucide-react';
+import { ProjectImage } from '@/types/project';
+import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+
+interface SortableImageProps {
+  image: ProjectImage;
+  onSetFavorite: (id: string) => void;
+  onDelete: (id: string) => void;
+}
+
+const SortableImage = ({ image, onSetFavorite, onDelete }: SortableImageProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: image.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 10 : 1,
+  };
+
+  return (
+    <motion.div
+      ref={setNodeRef}
+      style={style}
+      className={`relative aspect-square rounded-xl overflow-hidden bg-card border border-border/50 ${
+        isDragging ? 'opacity-50 scale-105' : ''
+      }`}
+      layout
+    >
+      <img
+        src={image.url}
+        alt="Gallery image"
+        className="w-full h-full object-cover"
+      />
+
+      {/* Drag handle */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute top-2 left-1/2 -translate-x-1/2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm cursor-grab active:cursor-grabbing opacity-60 hover:opacity-100 transition-opacity"
+      >
+        <GripVertical className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+      </div>
+
+      {/* Star/Favorite button */}
+      <button
+        onClick={() => onSetFavorite(image.id)}
+        className="absolute top-2 right-2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm transition-all hover:scale-110"
+        aria-label={image.isFavorite ? 'Current favorite' : 'Set as favorite'}
+      >
+        <Star
+          className={`w-4 h-4 transition-colors ${
+            image.isFavorite
+              ? 'fill-yellow-400 text-yellow-400'
+              : 'text-foreground/60 hover:text-yellow-400'
+          }`}
+          strokeWidth={1.5}
+        />
+      </button>
+
+      {/* Delete button */}
+      <button
+        onClick={() => onDelete(image.id)}
+        className="absolute top-2 left-2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm transition-all hover:scale-110 hover:bg-destructive/80"
+        aria-label="Delete image"
+      >
+        <Trash2 className="w-4 h-4 text-destructive" strokeWidth={1.5} />
+      </button>
+
+      {/* Favorite badge */}
+      {image.isFavorite && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-background/90 backdrop-blur-sm">
+          <span className="text-[10px] uppercase tracking-wider text-foreground font-medium">
+            Main
+          </span>
+        </div>
+      )}
+    </motion.div>
+  );
+};
+
+interface GalleryManagerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  images: ProjectImage[];
+  onImagesChange: (images: ProjectImage[]) => void;
+  maxImages?: number;
+}
+
+const GalleryManager = ({
+  isOpen,
+  onClose,
+  images,
+  onImagesChange,
+  maxImages = 10,
+}: GalleryManagerProps) => {
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = images.findIndex((img) => img.id === active.id);
+      const newIndex = images.findIndex((img) => img.id === over.id);
+
+      const newImages = arrayMove(images, oldIndex, newIndex).map((img, index) => ({
+        ...img,
+        order: index,
+      }));
+
+      onImagesChange(newImages);
+    }
+  };
+
+  const handleSetFavorite = (id: string) => {
+    const newImages = images.map((img) => ({
+      ...img,
+      isFavorite: img.id === id,
+    }));
+    onImagesChange(newImages);
+    toast({
+      title: 'Image set as main',
+      description: 'This image will be displayed as the project cover',
+      duration: 2000,
+    });
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!deleteConfirmId) return;
+
+    const imageToDelete = images.find((img) => img.id === deleteConfirmId);
+    const newImages = images
+      .filter((img) => img.id !== deleteConfirmId)
+      .map((img, index) => ({ ...img, order: index }));
+
+    // If we deleted the favorite, make the first remaining image the favorite
+    if (imageToDelete?.isFavorite && newImages.length > 0) {
+      newImages[0].isFavorite = true;
+    }
+
+    onImagesChange(newImages);
+    setDeleteConfirmId(null);
+    toast({
+      title: 'Image removed',
+      description: 'The image has been deleted from your gallery',
+      duration: 2000,
+    });
+  };
+
+  const handleAddImages = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    const remainingSlots = maxImages - images.length;
+    if (remainingSlots <= 0) {
+      toast({
+        title: 'Gallery full',
+        description: `Maximum ${maxImages} images allowed`,
+        variant: 'destructive',
+        duration: 3000,
+      });
+      return;
+    }
+
+    const filesToProcess = Array.from(files).slice(0, remainingSlots);
+
+    filesToProcess.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newImage: ProjectImage = {
+          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          url: e.target?.result as string,
+          order: images.length,
+          isFavorite: images.length === 0, // First image is favorite by default
+          uploadedAt: Date.now(),
+        };
+
+        onImagesChange([...images, newImage]);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-md"
+            initial={{ opacity: 0, y: '100%' }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          >
+            {/* Header */}
+            <header className="flex items-center justify-between p-4 border-b border-border/50">
+              <h2 className="text-lg font-light tracking-wide uppercase text-foreground">
+                Gallery Manager
+              </h2>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  {images.length}/{maxImages}
+                </span>
+                <button
+                  onClick={onClose}
+                  className="p-2 rounded-full hover:bg-card transition-colors"
+                  aria-label="Close gallery"
+                >
+                  <X className="w-5 h-5 text-foreground" strokeWidth={1.5} />
+                </button>
+              </div>
+            </header>
+
+            {/* Gallery Grid */}
+            <div className="flex-1 overflow-y-auto p-4">
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={images.map((img) => img.id)}
+                  strategy={rectSortingStrategy}
+                >
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {images.map((image) => (
+                      <SortableImage
+                        key={image.id}
+                        image={image}
+                        onSetFavorite={handleSetFavorite}
+                        onDelete={(id) => setDeleteConfirmId(id)}
+                      />
+                    ))}
+
+                    {/* Add button */}
+                    {images.length < maxImages && (
+                      <motion.button
+                        onClick={triggerFileInput}
+                        className="aspect-square rounded-xl border-2 border-dashed border-border/50 flex flex-col items-center justify-center gap-2 hover:border-foreground/50 hover:bg-card/50 transition-all"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Plus className="w-8 h-8 text-muted-foreground" strokeWidth={1} />
+                        <span className="text-xs text-muted-foreground uppercase tracking-wider">
+                          Add Image
+                        </span>
+                      </motion.button>
+                    )}
+                  </div>
+                </SortableContext>
+              </DndContext>
+
+              {/* Empty state */}
+              {images.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <p className="text-muted-foreground text-sm mb-4">
+                    No images yet. Add your first image to get started.
+                  </p>
+                  <button
+                    onClick={triggerFileInput}
+                    className="px-6 py-3 rounded-full bg-foreground text-background font-medium text-sm uppercase tracking-wider hover:bg-foreground/90 transition-colors"
+                  >
+                    Add Image
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleAddImages}
+              className="hidden"
+            />
+
+            {/* Footer instructions */}
+            <footer className="p-4 border-t border-border/50">
+              <p className="text-xs text-muted-foreground text-center font-extralight">
+                Drag to reorder • Star to set as main • Tap delete to remove
+              </p>
+            </footer>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Image</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove this image from your gallery? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+};
+
+export default GalleryManager;
