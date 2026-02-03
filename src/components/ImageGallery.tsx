@@ -104,80 +104,78 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
   const thumbnailUrl = getNextThumbnailUrl();
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      {/* Main Image Container */}
-      <div className="relative" ref={containerRef}>
-        {/* Navigation arrows for desktop */}
-        {hasMultipleImages && (
-          <>
-            <button
-              onClick={goToPrev}
-              className="absolute left-[-40px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-            </button>
-            <button
-              onClick={goToNext}
-              className="absolute right-[-40px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
-              aria-label="Next image"
-            >
-              <ChevronRight className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-            </button>
-          </>
-        )}
+    <div className="relative" ref={containerRef}>
+      {/* Navigation arrows for desktop */}
+      {hasMultipleImages && (
+        <>
+          <button
+            onClick={goToPrev}
+            className="absolute left-[-40px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+          </button>
+          <button
+            onClick={goToNext}
+            className="absolute right-[-40px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-4 h-4 text-foreground" strokeWidth={1.5} />
+          </button>
+        </>
+      )}
 
-        {/* Image with swipe */}
-        <motion.div
-          className="hero-image-overlay rounded-full overflow-hidden cursor-grab active:cursor-grabbing"
-          style={{ width: size, height: size }}
-          drag={hasMultipleImages ? "x" : false}
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.2}
-          onDragEnd={(_, info) => handleSwipe(info)}
-        >
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.img
-              key={currentIndex}
-              src={getCurrentImageUrl()}
-              alt={project.name}
-              className="w-full h-full object-cover"
-              custom={direction}
-              variants={variants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
-              draggable={false}
-            />
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Image counter dots */}
-        {hasMultipleImages && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-            {sortedImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setDirection(index > currentIndex ? 1 : -1);
-                  setCurrentIndex(index);
-                }}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? 'bg-foreground w-3'
-                    : 'bg-foreground/40'
-                }`}
-                aria-label={`Go to image ${index + 1}`}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Thumbnail Preview - Always visible */}
+      {/* Image with swipe */}
       <motion.div
-        className="relative"
+        className="hero-image-overlay rounded-full overflow-hidden cursor-grab active:cursor-grabbing"
+        style={{ width: size, height: size }}
+        drag={hasMultipleImages ? "x" : false}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(_, info) => handleSwipe(info)}
+      >
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.img
+            key={currentIndex}
+            src={getCurrentImageUrl()}
+            alt={project.name}
+            className="w-full h-full object-cover"
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            draggable={false}
+          />
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Image counter dots */}
+      {hasMultipleImages && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {sortedImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                setDirection(index > currentIndex ? 1 : -1);
+                setCurrentIndex(index);
+              }}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                index === currentIndex
+                  ? 'bg-foreground w-3'
+                  : 'bg-foreground/40'
+              }`}
+              aria-label={`Go to image ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Thumbnail Preview - Bottom Left */}
+      <motion.div
+        className="absolute z-20"
+        style={{ bottom: '-10px', left: '-15px' }}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
@@ -219,11 +217,6 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
             </svg>
           )}
         </button>
-        
-        {/* Hint text */}
-        <p className="text-[10px] text-muted-foreground text-center mt-2 font-extralight tracking-wide">
-          {hasMultipleImages ? 'Tap to swap • Hold to manage' : 'Hold to add images'}
-        </p>
       </motion.div>
     </div>
   );
