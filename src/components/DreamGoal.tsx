@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { History, Settings, BarChart2 } from "lucide-react";
+import { Settings, BarChart2 } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import LuxuryProgressBar from "./LuxuryProgressBar";
 import PalierControls from "./PalierControls";
@@ -135,15 +135,6 @@ const DreamGoal = () => {
             <BarChart2 className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
           </button>
           
-          <DepositHistory deposits={getRecentDeposits(20)} onRemoveDeposit={removeDeposit}>
-            <button
-              className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
-              aria-label="Historique"
-            >
-              <History className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
-            </button>
-          </DepositHistory>
-          
           <button
             onClick={() => navigate("/settings")}
             className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
@@ -206,7 +197,12 @@ const DreamGoal = () => {
 
       {/* Daily History */}
       <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.4s' }}>
-        <DailyHistory deposits={deposits} palierValue={activeProject.palierValue} />
+        <DailyHistory 
+          deposits={deposits} 
+          palierValue={activeProject.palierValue}
+          allDeposits={getRecentDeposits(20)}
+          onRemoveDeposit={removeDeposit}
+        />
       </div>
 
       {/* Calendar */}
