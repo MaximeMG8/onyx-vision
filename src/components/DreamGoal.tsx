@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera, History, Settings, BarChart2 } from "lucide-react";
+import { History, Settings, BarChart2 } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import LuxuryProgressBar from "./LuxuryProgressBar";
 import PalierControls from "./PalierControls";
@@ -13,8 +13,6 @@ import ImageGallery from "./ImageGallery";
 import GalleryManager from "./GalleryManager";
 import { useProjectManager } from "@/hooks/useProjectManager";
 import { useToast } from "@/hooks/use-toast";
-import { getFavoriteImage } from "@/types/project";
-import luxuryWatch from "@/assets/luxury-watch.jpg";
 
 const DreamGoal = () => {
   const navigate = useNavigate();
@@ -44,10 +42,6 @@ const DreamGoal = () => {
     updateProjectImages,
     getProjectImages
   } = useProjectManager();
-
-  // Get project images for gallery
-  const projectImages = getProjectImages();
-  const hasGalleryImages = projectImages.length > 0;
 
   const handleAddPaliers = (count: number) => {
     if (!activeProject) return;
@@ -98,7 +92,7 @@ const DreamGoal = () => {
     );
   }
 
-  const displayImage = getFavoriteImage(activeProject) || luxuryWatch;
+  const projectImages = getProjectImages();
   const ringSize = Math.min(window.innerWidth * 0.6, 280);
   const imageSize = Math.min(window.innerWidth * 0.52, 250);
 
@@ -190,50 +184,15 @@ const DreamGoal = () => {
         </div>
       </div>
 
-      {/* Progress Ring with Image Gallery */}
+      {/* Progress Ring with Image Gallery - Always show gallery component for thumbnail */}
       <div className="animate-scale-in relative">
         <ProgressRing progress={progress} size={ringSize} strokeWidth={2}>
-          {hasGalleryImages ? (
-            <ImageGallery
-              project={activeProject}
-              size={imageSize}
-              onOpenGalleryManager={() => setIsGalleryOpen(true)}
-            />
-          ) : (
-            <div
-              className="relative hero-image-overlay rounded-full overflow-hidden"
-              style={{ width: imageSize, height: imageSize }}
-            >
-              <img
-                src={displayImage}
-                alt={activeProject.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
+          <ImageGallery
+            project={activeProject}
+            size={imageSize}
+            onOpenGalleryManager={() => setIsGalleryOpen(true)}
+          />
         </ProgressRing>
-        
-        {/* Camera button overlay - show when no gallery images */}
-        {!hasGalleryImages && (
-          <button
-            onClick={triggerImageUpload}
-            className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center transition-all duration-300 hover:bg-background hover:scale-110 hover:border-foreground/30"
-            aria-label="Modifier la photo"
-          >
-            <Camera className="text-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
-          </button>
-        )}
-
-        {/* Camera button for adding first gallery image */}
-        {hasGalleryImages && (
-          <button
-            onClick={() => setIsGalleryOpen(true)}
-            className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center transition-all duration-300 hover:bg-background hover:scale-110 hover:border-foreground/30"
-            aria-label="Manage gallery"
-          >
-            <Camera className="text-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
-          </button>
-        )}
       </div>
 
       {/* Palier Controls */}

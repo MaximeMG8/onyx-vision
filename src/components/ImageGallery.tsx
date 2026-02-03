@@ -43,11 +43,14 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
     return project.imageUrl || luxuryWatch;
   };
 
-  // Get next thumbnail URL
-  const getNextThumbnailUrl = (): string | null => {
-    if (sortedImages.length <= 1) return null;
-    const nextIndex = (currentIndex + 1) % sortedImages.length;
-    return sortedImages[nextIndex]?.url || null;
+  // Get next thumbnail URL (always returns something for display)
+  const getNextThumbnailUrl = (): string => {
+    if (sortedImages.length > 1) {
+      const nextIndex = (currentIndex + 1) % sortedImages.length;
+      return sortedImages[nextIndex]?.url || luxuryWatch;
+    }
+    // Show current image if only one, or default
+    return sortedImages[0]?.url || project.imageUrl || luxuryWatch;
   };
 
   const handleSwipe = (info: PanInfo) => {
@@ -172,52 +175,56 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
         )}
       </div>
 
-      {/* Thumbnail Preview */}
-      {thumbnailUrl && (
-        <motion.div
-          className="relative"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
+      {/* Thumbnail Preview - Always visible */}
+      <motion.div
+        className="relative"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <button
+          onClick={hasMultipleImages ? handleThumbnailClick : onOpenGalleryManager}
+          {...handlers}
+          className="relative rounded-full overflow-hidden transition-all duration-300 hover:scale-105"
+          style={{ 
+            width: 70, 
+            height: 70,
+            border: '2px solid #888888',
+            boxShadow: '0 4px 20px rgba(255, 255, 255, 0.1)'
+          }}
+          aria-label={hasMultipleImages ? "View next image. Long press to manage gallery." : "Long press to add images"}
         >
-          <button
-            onClick={handleThumbnailClick}
-            {...handlers}
-            className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-muted-foreground/50 transition-all duration-300 hover:border-foreground/70 hover:scale-105"
-            aria-label="View next image. Long press to open gallery manager."
-          >
-            <img
-              src={thumbnailUrl}
-              alt="Next image preview"
-              className="w-full h-full object-cover"
-            />
-            
-            {/* Long press progress ring */}
-            {isPressed && (
-              <svg
-                className="absolute inset-0 w-full h-full -rotate-90"
-                viewBox="0 0 100 100"
-              >
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="48"
-                  fill="none"
-                  stroke="hsl(var(--accent-color))"
-                  strokeWidth="4"
-                  strokeDasharray={`${progress * 3.01} 301`}
-                  className="transition-all duration-50"
-                />
-              </svg>
-            )}
-          </button>
+          <img
+            src={thumbnailUrl}
+            alt="Gallery preview"
+            className="w-full h-full object-cover"
+          />
           
-          {/* Hint text */}
-          <p className="text-[10px] text-muted-foreground text-center mt-1 font-extralight">
-            Hold to manage
-          </p>
-        </motion.div>
-      )}
+          {/* Long press progress ring */}
+          {isPressed && (
+            <svg
+              className="absolute inset-0 w-full h-full -rotate-90"
+              viewBox="0 0 100 100"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="48"
+                fill="none"
+                stroke="hsl(var(--accent-color))"
+                strokeWidth="4"
+                strokeDasharray={`${progress * 3.01} 301`}
+                className="transition-all duration-50"
+              />
+            </svg>
+          )}
+        </button>
+        
+        {/* Hint text */}
+        <p className="text-[10px] text-muted-foreground text-center mt-2 font-extralight tracking-wide">
+          {hasMultipleImages ? 'Tap to swap • Hold to manage' : 'Hold to add images'}
+        </p>
+      </motion.div>
     </div>
   );
 };
