@@ -1,11 +1,14 @@
 import { Deposit } from "@/hooks/useDepositManager";
+import DepositHistory from "./DepositHistory";
 
 interface DailyHistoryProps {
   deposits: Deposit[];
   palierValue: number;
+  allDeposits: Deposit[];
+  onRemoveDeposit: (id: string) => void;
 }
 
-const DailyHistory = ({ deposits, palierValue }: DailyHistoryProps) => {
+const DailyHistory = ({ deposits, palierValue, allDeposits, onRemoveDeposit }: DailyHistoryProps) => {
   // Group deposits by date
   const depositsByDate = deposits.reduce((acc, deposit) => {
     const date = deposit.date;
@@ -44,17 +47,30 @@ const DailyHistory = ({ deposits, palierValue }: DailyHistoryProps) => {
 
   if (sortedDates.length === 0) {
     return (
-      <div className="text-center text-muted-foreground text-xs font-extralight tracking-wide">
-        No history yet
+      <div className="w-full space-y-2">
+        <DepositHistory deposits={allDeposits} onRemoveDeposit={onRemoveDeposit}>
+          <button className="w-full py-2 cursor-pointer hover:opacity-80 transition-opacity">
+            <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight text-center">
+              History
+            </h3>
+          </button>
+        </DepositHistory>
+        <div className="text-center text-muted-foreground text-xs font-extralight tracking-wide">
+          No history yet
+        </div>
       </div>
     );
   }
 
   return (
     <div className="w-full space-y-2">
-      <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight text-center mb-3">
-        History
-      </h3>
+      <DepositHistory deposits={allDeposits} onRemoveDeposit={onRemoveDeposit}>
+        <button className="w-full py-2 cursor-pointer hover:opacity-80 transition-opacity">
+          <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight text-center">
+            History
+          </h3>
+        </button>
+      </DepositHistory>
       <div className="space-y-1">
         {sortedDates.map((date) => {
           const paliers = getPaliersForDate(date);
