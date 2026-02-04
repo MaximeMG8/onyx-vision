@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FolderOpen, Plus, Check, Trash2, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Project, PROJECT_COLORS, ProjectColor } from '@/types/project';
 import CreateProjectDialog from './CreateProjectDialog';
 import EditProjectDialog from './EditProjectDialog';
@@ -135,9 +136,11 @@ const ProjectSelector = ({
             </p>
           </div>
 
-          <div className="mt-2 space-y-2">
-            {projects.map(project => <ProjectItem key={project.id} project={project} isActive={project.id === activeProjectId} projectsCount={projects.length} onSelect={() => handleSelectProject(project.id)} onViewProgress={e => handleViewProgress(e, project.id)} onDelete={e => handleDeleteProject(e, project.id)} onLongPress={() => handleLongPress(project)} />)}
-          </div>
+          <ScrollArea className="mt-2 max-h-[50vh]">
+            <div className="space-y-2 pr-3">
+              {projects.map(project => <ProjectItem key={project.id} project={project} isActive={project.id === activeProjectId} projectsCount={projects.length} onSelect={() => handleSelectProject(project.id)} onViewProgress={e => handleViewProgress(e, project.id)} onDelete={e => handleDeleteProject(e, project.id)} onLongPress={() => handleLongPress(project)} />)}
+            </div>
+          </ScrollArea>
 
           <div className="mt-6">
             <Button variant="outline" onClick={() => setIsCreateOpen(true)} className="w-full border-border/30 hover:bg-card font-extralight">
