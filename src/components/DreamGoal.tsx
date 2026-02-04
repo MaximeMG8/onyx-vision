@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, BarChart2 } from "lucide-react";
 import ProgressRing from "./ProgressRing";
@@ -12,13 +12,16 @@ import ProjectSelector from "./ProjectSelector";
 import ImageGallery from "./ImageGallery";
 import GalleryManager from "./GalleryManager";
 import { useProjectManager } from "@/hooks/useProjectManager";
+import { useImageColor } from "@/hooks/useImageColor";
 import { useToast } from "@/hooks/use-toast";
 
 const DreamGoal = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | undefined>();
   const { toast } = useToast();
+  const { dominantColor } = useImageColor(currentImageUrl);
 
   const {
     isLoaded,
@@ -82,6 +85,10 @@ const DreamGoal = () => {
   const triggerImageUpload = () => {
     fileInputRef.current?.click();
   };
+
+  const handleImageChange = useCallback((imageUrl: string) => {
+    setCurrentImageUrl(imageUrl);
+  }, []);
 
   // Show loading state
   if (!isLoaded || !activeProject) {
@@ -177,11 +184,12 @@ const DreamGoal = () => {
 
       {/* Progress Ring with Image Gallery - Always show gallery component for thumbnail */}
       <div className="animate-scale-in relative">
-        <ProgressRing progress={progress} size={ringSize} strokeWidth={2}>
+        <ProgressRing progress={progress} size={ringSize} strokeWidth={2} glowColor={dominantColor}>
           <ImageGallery
             project={activeProject}
             size={imageSize}
             onOpenGalleryManager={() => setIsGalleryOpen(true)}
+            onImageChange={handleImageChange}
           />
         </ProgressRing>
       </div>
