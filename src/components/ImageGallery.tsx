@@ -9,9 +9,10 @@ interface ImageGalleryProps {
   project: Project;
   size: number;
   onOpenGalleryManager: () => void;
+  onImageChange?: (imageUrl: string) => void;
 }
 
-const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps) => {
+const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: ImageGalleryProps) => {
   const sortedImages = getSortedImages(project);
   const hasMultipleImages = sortedImages.length > 1;
   
@@ -42,6 +43,13 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
     }
     return project.imageUrl || luxuryWatch;
   };
+
+  const currentImageUrl = getCurrentImageUrl();
+
+  // Notify parent of image changes for color extraction
+  useEffect(() => {
+    onImageChange?.(currentImageUrl);
+  }, [currentImageUrl, onImageChange]);
 
   // Get next thumbnail URL (always returns something for display)
   const getNextThumbnailUrl = (): string => {
@@ -137,7 +145,7 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
         <AnimatePresence mode="wait" custom={direction}>
           <motion.img
             key={currentIndex}
-            src={getCurrentImageUrl()}
+            src={currentImageUrl}
             alt={project.name}
             className="w-full h-full object-cover"
             custom={direction}
