@@ -94,7 +94,7 @@ const DreamGoal = () => {
 
   const projectImages = getProjectImages();
   const ringSize = Math.min(window.innerWidth * 0.6, 280);
-  const imageSize = Math.min(window.innerWidth * 0.52, 250);
+  const imageSize = Math.min(window.innerWidth * 0.58, 270);
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center py-6 px-4 gap-6 overflow-x-hidden">
