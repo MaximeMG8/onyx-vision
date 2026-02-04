@@ -175,7 +175,7 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
       {/* Thumbnail Preview - Bottom Left */}
       <motion.div
         className="absolute z-20"
-        style={{ bottom: '-10px', left: '-15px' }}
+        style={{ bottom: '-25px', left: '-25px' }}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
@@ -185,8 +185,8 @@ const ImageGallery = ({ project, size, onOpenGalleryManager }: ImageGalleryProps
           {...handlers}
           className="relative rounded-full overflow-hidden transition-all duration-300 hover:scale-105"
           style={{ 
-            width: 70, 
-            height: 70,
+            width: 88, 
+            height: 88,
             border: '2px solid #888888',
             boxShadow: '0 4px 20px rgba(255, 255, 255, 0.1)'
           }}
