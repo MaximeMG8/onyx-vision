@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { FolderOpen, Plus, Check, Trash2, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-
 import { Project, PROJECT_COLORS, ProjectColor } from '@/types/project';
 import CreateProjectDialog from './CreateProjectDialog';
 import EditProjectDialog from './EditProjectDialog';
@@ -142,7 +141,7 @@ const ProjectSelector = ({
 
           <div className="mt-6">
             <Button variant="outline" onClick={() => setIsCreateOpen(true)} className="w-full border-border/30 hover:bg-card font-extralight">
-              <Plus className="w-4 h-4 mr-2" strokeWidth={1.5} />
+              <Plus className="mr-2 w-[18px] h-[18px]" strokeWidth={1.5} />
               New Project
             </Button>
           </div>
