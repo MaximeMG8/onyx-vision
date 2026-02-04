@@ -113,19 +113,34 @@ const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: Im
 
   return (
     <div className="relative" ref={containerRef}>
+      {/* Extended swipe zone - covers the entire glow area */}
+      <motion.div
+        className="absolute inset-0 z-10 cursor-grab active:cursor-grabbing"
+        style={{ 
+          width: size + 80, 
+          height: size + 80,
+          left: -40,
+          top: -40,
+        }}
+        drag={hasMultipleImages ? "x" : false}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
+        onDragEnd={(_, info) => handleSwipe(info)}
+      />
+
       {/* Navigation arrows for desktop */}
       {hasMultipleImages && (
         <>
           <button
             onClick={goToPrev}
-            className="absolute left-[-40px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
+            className="absolute left-[-40px] top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
             aria-label="Previous image"
           >
             <ChevronLeft className="w-4 h-4 text-foreground" strokeWidth={1.5} />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-[-40px] top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
+            className="absolute right-[-40px] top-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300"
             aria-label="Next image"
           >
             <ChevronRight className="w-4 h-4 text-foreground" strokeWidth={1.5} />
@@ -133,14 +148,10 @@ const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: Im
         </>
       )}
 
-      {/* Image with swipe */}
-      <motion.div
-        className="hero-image-overlay rounded-full overflow-hidden cursor-grab active:cursor-grabbing"
+      {/* Image display (visual only, drag handled by extended zone) */}
+      <div
+        className="hero-image-overlay rounded-full overflow-hidden"
         style={{ width: size, height: size }}
-        drag={hasMultipleImages ? "x" : false}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.2}
-        onDragEnd={(_, info) => handleSwipe(info)}
       >
         <AnimatePresence mode="wait" custom={direction}>
           <motion.img
@@ -157,7 +168,7 @@ const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: Im
             draggable={false}
           />
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       {/* Image counter dots */}
       {hasMultipleImages && (
