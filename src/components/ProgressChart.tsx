@@ -137,17 +137,16 @@ const ProgressChart = ({
     if (active && payload && payload.length) {
       return (
         <div 
-          className="border px-3 py-2 rounded-lg backdrop-blur-sm"
+          className="px-2.5 py-1.5 rounded backdrop-blur-sm"
           style={{
-            backgroundColor: 'hsla(0 0% 0% / 0.95)',
-            borderColor: accentHsla(0.4)
+            backgroundColor: 'hsla(0 0% 100% / 0.95)',
           }}
         >
-          <p className="text-foreground text-sm font-light">
+          <p className="text-black text-xs font-medium">
             €{payload[0].value.toLocaleString('de-DE')}
           </p>
-          <p className="text-muted-foreground text-xs">
-            {payload[0].payload.percentage}% of goal
+          <p className="text-black/60 text-[10px]">
+            {payload[0].payload.percentage}%
           </p>
         </div>
       );
@@ -165,7 +164,7 @@ const ProgressChart = ({
 
   if (allChartData.length === 0) {
     return (
-      <div className="h-[200px] flex items-center justify-center border border-border/30 rounded-lg bg-card/20">
+      <div className="h-[160px] flex items-center justify-center">
         <p className="text-muted-foreground text-sm font-light">No data yet</p>
       </div>
     );
@@ -192,12 +191,12 @@ const ProgressChart = ({
         )}
       </div>
       
-      {/* Interactive chart container */}
+      {/* Interactive chart container - panoramic style */}
       <div
         ref={containerRef}
-        className="h-[240px] w-full border-border/30 p-4 px-2 border-0 py-3 rounded-lg shadow-lg relative touch-none"
+        className="h-[170px] w-full relative touch-none"
         style={{
-          background: 'linear-gradient(180deg, hsla(0 0% 5% / 0.9) 0%, hsla(0 0% 0% / 0.95) 100%)'
+          background: 'transparent'
         }}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -242,26 +241,28 @@ const ProgressChart = ({
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart 
             data={visibleData} 
-            margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+            margin={{ top: 5, right: 5, left: -15, bottom: 0 }}
             onClick={handleChartClick}
           >
             <defs>
               <linearGradient id={`progressGradient-${accentColor.replace(/\s/g, '')}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={accentHsl} stopOpacity={0.5} />
-                <stop offset="50%" stopColor={accentHsl} stopOpacity={0.2} />
-                <stop offset="100%" stopColor={accentHsl} stopOpacity={0} />
+                <stop offset="0%" stopColor="hsl(0 0% 100%)" stopOpacity={0.15} />
+                <stop offset="40%" stopColor="hsl(0 0% 100%)" stopOpacity={0.05} />
+                <stop offset="100%" stopColor="hsl(0 0% 100%)" stopOpacity={0} />
               </linearGradient>
             </defs>
+            {/* Subtle horizontal gridlines */}
             <XAxis 
               dataKey="date" 
               axisLine={false} 
               tickLine={false} 
               tick={{
                 fill: 'hsl(var(--muted-foreground))',
-                fontSize: 9,
-                fontWeight: 300
+                fontSize: 8,
+                fontWeight: 300,
+                fontFamily: 'system-ui, sans-serif'
               }} 
-              dy={10} 
+              dy={8} 
               interval="preserveStartEnd" 
             />
             <YAxis 
@@ -269,21 +270,23 @@ const ProgressChart = ({
               tickLine={false} 
               tick={{
                 fill: 'hsl(var(--muted-foreground))',
-                fontSize: 9,
-                fontWeight: 300
+                fontSize: 8,
+                fontWeight: 300,
+                fontFamily: 'system-ui, sans-serif'
               }} 
-              tickFormatter={value => value >= 1000 ? `€${(value / 1000).toFixed(0)}k` : `€${value}`} 
-              width={45} 
+              tickFormatter={value => value >= 1000 ? `€${(value / 1000).toFixed(1)}k` : `€${value}`} 
+              width={40}
+              tickCount={6}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area 
               type="monotone" 
               dataKey="total" 
-              stroke={accentHsl} 
-              strokeWidth={2.5} 
+              stroke="hsl(0 0% 100%)" 
+              strokeWidth={2} 
               fill={`url(#progressGradient-${accentColor.replace(/\s/g, '')})`} 
               style={{
-                filter: `drop-shadow(0 0 10px ${accentHsla(0.6)})`
+                filter: 'drop-shadow(0 0 8px hsla(0 0% 100% / 0.4))'
               }}
               animationDuration={300}
             />
