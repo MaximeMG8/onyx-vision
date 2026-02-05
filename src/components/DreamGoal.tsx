@@ -7,12 +7,14 @@ import PalierControls from "./PalierControls";
 import DailyHistory from "./DailyHistory";
 import DepositHistory from "./DepositHistory";
 import DepositCalendar from "./DepositCalendar";
+import ProgressChart from "./ProgressChart";
 import AnimatedCounter from "./AnimatedCounter";
 import ProjectSelector from "./ProjectSelector";
 import ImageGallery from "./ImageGallery";
 import GalleryManager from "./GalleryManager";
 import { useProjectManager } from "@/hooks/useProjectManager";
 import { useImageColor } from "@/hooks/useImageColor";
+import { PROJECT_COLORS } from "@/types/project";
 import { useToast } from "@/hooks/use-toast";
 
 const DreamGoal = () => {
@@ -210,6 +212,15 @@ const DreamGoal = () => {
           palierValue={activeProject.palierValue}
           allDeposits={getRecentDeposits(20)}
           onRemoveDeposit={removeDeposit}
+        />
+      </div>
+
+      {/* Analytics Chart */}
+      <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.45s' }}>
+        <ProgressChart 
+          deposits={deposits}
+          targetAmount={activeProject.targetAmount}
+          accentColor={PROJECT_COLORS[activeProject.color].hsl}
         />
       </div>
 
