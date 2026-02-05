@@ -68,7 +68,7 @@ const ProgressChart = ({
       </div>;
   }
   return <div className="w-full">
-      <h3 className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-light mb-4 text-center">
+      <h3 className="uppercase tracking-[0.25em] text-muted-foreground font-light mb-4 text-center text-xs">
         Analytics — Growth Chart
       </h3>
       
