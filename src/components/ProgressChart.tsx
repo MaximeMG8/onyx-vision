@@ -72,7 +72,7 @@ const ProgressChart = ({
         Analytics — Growth Chart
       </h3>
       
-      <div className="h-[220px] w-full border border-border/30 p-4 px-px rounded" style={{
+      <div className="h-[220px] w-full border-border/30 p-4 px-px border-0 py-px rounded-none shadow-md" style={{
       background: 'linear-gradient(180deg, hsla(0 0% 5% / 0.8) 0%, hsla(0 0% 0% / 0.9) 100%)'
     }}>
         <ResponsiveContainer width="100%" height="100%">
