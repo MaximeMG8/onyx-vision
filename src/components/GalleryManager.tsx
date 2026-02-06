@@ -53,7 +53,7 @@ const SortableImage = ({
       {/* Favorite badge */}
       {image.isFavorite && <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-background/90 backdrop-blur-sm">
           <span className="text-[10px] uppercase tracking-wider text-foreground font-medium">
-            Main
+            Principale
           </span>
         </div>}
     </motion.div>;
@@ -106,8 +106,8 @@ const GalleryManager = ({
     }));
     onImagesChange(newImages);
     toast({
-      title: 'Image set as main',
-      description: 'This image will be displayed as the project cover',
+      title: 'Image principale définie',
+      description: 'Cette image sera affichée comme couverture du projet',
       duration: 2000
     });
   };
@@ -126,8 +126,8 @@ const GalleryManager = ({
     onImagesChange(newImages);
     setDeleteConfirmId(null);
     toast({
-      title: 'Image removed',
-      description: 'The image has been deleted from your gallery',
+      title: 'Image supprimée',
+      description: 'L\'image a été retirée de votre galerie',
       duration: 2000
     });
   };
@@ -137,8 +137,8 @@ const GalleryManager = ({
     const remainingSlots = maxImages - images.length;
     if (remainingSlots <= 0) {
       toast({
-        title: 'Gallery full',
-        description: `Maximum ${maxImages} images allowed`,
+        title: 'Galerie pleine',
+        description: `Maximum ${maxImages} images autorisées`,
         variant: 'destructive',
         duration: 3000
       });
@@ -188,13 +188,13 @@ const GalleryManager = ({
             {/* Header */}
             <header className="flex items-center justify-between p-4 border-b border-border/50">
               <h2 className="text-lg font-light tracking-wide uppercase text-foreground">
-                Gallery Manager
+                Gestionnaire de Galerie
               </h2>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-muted-foreground">
                   {images.length}/{maxImages}
                 </span>
-                <button onClick={onClose} className="p-2 rounded-full hover:bg-card transition-colors" aria-label="Close gallery">
+                <button onClick={onClose} className="p-2 rounded-full hover:bg-card transition-colors" aria-label="Fermer la galerie">
                   <X className="w-5 h-5 text-foreground" strokeWidth={1.5} />
                 </button>
               </div>
@@ -215,7 +215,7 @@ const GalleryManager = ({
                 }}>
                         <Plus className="w-8 h-8 text-muted-foreground" strokeWidth={1} />
                         <span className="text-xs text-muted-foreground uppercase tracking-wider">
-                          Add Image
+                          Ajouter
                         </span>
                       </motion.button>}
                   </div>
@@ -225,10 +225,10 @@ const GalleryManager = ({
               {/* Empty state */}
               {images.length === 0 && <div className="flex flex-col items-center justify-center py-16">
                   <p className="text-muted-foreground text-sm mb-4">
-                    No images yet. Add your first image to get started.
+                    Aucune image. Ajoutez votre première image pour commencer.
                   </p>
                   <button onClick={triggerFileInput} className="px-6 py-3 rounded-full bg-foreground text-background font-medium text-sm uppercase tracking-wider hover:bg-foreground/90 transition-colors">
-                    Add Image
+                    Ajouter une Image
                   </button>
                 </div>}
             </div>
@@ -239,7 +239,7 @@ const GalleryManager = ({
             {/* Footer instructions */}
             <footer className="p-4 border-t border-border/50">
               <p className="text-xs text-muted-foreground text-center font-extralight">
-                Drag to reorder • Star to set as main • Tap delete to remove
+                Glisser pour réorganiser • Étoile pour définir comme principale • Supprimer pour retirer
               </p>
             </footer>
           </motion.div>}
@@ -249,15 +249,15 @@ const GalleryManager = ({
       <AlertDialog open={!!deleteConfirmId} onOpenChange={() => setDeleteConfirmId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Image</AlertDialogTitle>
+            <AlertDialogTitle>Supprimer l'image</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove this image from your gallery? This action cannot be undone.
+              Êtes-vous sûr de vouloir retirer cette image de votre galerie ? Cette action est irréversible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Delete
+              Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -81,7 +81,7 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
       <DialogContent className="bg-black border border-white/10 max-w-sm p-0 gap-0">
         <DialogHeader className="p-6 pb-4 border-b border-white/5">
           <DialogTitle className="text-white font-extralight tracking-[0.2em] uppercase text-sm text-center">
-            Edit Project
+            Modifier le Projet
           </DialogTitle>
         </DialogHeader>
 
@@ -117,19 +117,19 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
               </div>
             </button>
             <span className="text-[10px] text-white/40 uppercase tracking-wider">
-              Tap to change image
+              Appuyez pour changer l'image
             </span>
           </div>
 
           {/* Project Name */}
           <div className="space-y-2">
             <label className="text-[10px] text-white/50 uppercase tracking-[0.15em]">
-              Project Name
+              Nom du Projet
             </label>
             <Input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Rolex, Apartment..."
+              placeholder="Ex : Rolex, Appartement..."
               className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-3 text-white font-extralight text-lg focus-visible:ring-0 focus-visible:border-white/50 placeholder:text-white/20"
             />
           </div>
@@ -137,14 +137,14 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
           {/* Target Amount */}
           <div className="space-y-2">
             <label className="text-[10px] text-white/50 uppercase tracking-[0.15em]">
-              Target Amount (€)
+              Montant Cible (€)
             </label>
             <Input
               type="number"
               min="1"
               value={targetAmount}
               onChange={(e) => setTargetAmount(e.target.value)}
-              placeholder="e.g., 250000"
+              placeholder="Ex : 250000"
               className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-3 text-white font-extralight text-lg focus-visible:ring-0 focus-visible:border-white/50 placeholder:text-white/20"
             />
           </div>
@@ -152,14 +152,14 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
           {/* Milestone Value */}
           <div className="space-y-2">
             <label className="text-[10px] text-white/50 uppercase tracking-[0.15em]">
-              Milestone Value (€)
+              Valeur du Palier (€)
             </label>
             <Input
               type="number"
               min="1"
               value={palierValue}
               onChange={(e) => setPalierValue(e.target.value)}
-              placeholder="e.g., 15"
+              placeholder="Ex : 15"
               className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-3 text-white font-extralight text-lg focus-visible:ring-0 focus-visible:border-white/50 placeholder:text-white/20"
             />
           </div>
@@ -167,7 +167,7 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
           {/* Deadline */}
           <div className="space-y-2">
             <label className="text-[10px] text-white/50 uppercase tracking-[0.15em]">
-              Target Deadline
+              Date Limite
             </label>
             <Popover>
               <PopoverTrigger asChild>
@@ -179,7 +179,7 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
                   )}
                 >
                   <CalendarIcon className="mr-3 h-4 w-4 text-white/40" strokeWidth={1.5} />
-                  {deadline ? format(deadline, "PPP") : "Set a deadline"}
+                  {deadline ? format(deadline, "PPP") : "Définir une date limite"}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0 bg-black border border-white/20" align="start">
@@ -199,7 +199,7 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
                       onClick={() => setDeadline(undefined)}
                       className="w-full text-white/60 hover:text-white hover:bg-white/5 font-extralight text-xs"
                     >
-                      Clear deadline
+                      Supprimer la date limite
                     </Button>
                   </div>
                 )}
@@ -210,7 +210,7 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
           {/* Color Selection */}
           <div className="space-y-3">
             <label className="text-[10px] text-white/50 uppercase tracking-[0.15em]">
-              Theme Color
+              Couleur du Thème
             </label>
             <div className="flex gap-3 justify-center">
               {(Object.keys(PROJECT_COLORS) as ProjectColor[]).map((color) => {
@@ -246,7 +246,7 @@ const EditProjectDialog = ({ isOpen, onClose, project, onSave }: EditProjectDial
             className="w-full bg-transparent border border-white/30 text-white hover:bg-white hover:text-black font-extralight tracking-wider uppercase text-xs py-6 transition-all duration-300"
             disabled={!isValid}
           >
-            Save Changes
+            Enregistrer
           </Button>
         </div>
       </DialogContent>

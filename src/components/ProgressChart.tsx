@@ -36,11 +36,11 @@ const ProgressChart = ({
       dailyData[deposit.date] = cumulative;
     });
     return Object.entries(dailyData).map(([date, total], index) => ({
-      date: new Date(date).toLocaleDateString('en-US', {
+      date: new Date(date).toLocaleDateString('fr-FR', {
         month: 'short',
         day: 'numeric'
       }),
-      fullDate: new Date(date).toLocaleDateString('en-US', {
+      fullDate: new Date(date).toLocaleDateString('fr-FR', {
         weekday: 'short',
         month: 'long',
         day: 'numeric',

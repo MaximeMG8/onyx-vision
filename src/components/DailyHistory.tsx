@@ -31,11 +31,11 @@ const DailyHistory = ({ deposits, palierValue, allDeposits, onRemoveDeposit }: D
     yesterday.setDate(yesterday.getDate() - 1);
 
     if (dateStr === today.toISOString().split('T')[0]) {
-      return "Today";
+      return "Aujourd'hui";
     } else if (dateStr === yesterday.toISOString().split('T')[0]) {
-      return "Yesterday";
+      return "Hier";
     } else {
-      return date.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric' });
+      return date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric' });
     }
   };
 
@@ -51,12 +51,12 @@ const DailyHistory = ({ deposits, palierValue, allDeposits, onRemoveDeposit }: D
         <DepositHistory deposits={allDeposits} onRemoveDeposit={onRemoveDeposit}>
           <button className="w-full py-2 cursor-pointer hover:opacity-80 transition-opacity">
             <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight text-center">
-              History
+              Historique
             </h3>
           </button>
         </DepositHistory>
         <div className="text-center text-muted-foreground text-xs font-extralight tracking-wide">
-          No history yet
+          Aucun historique
         </div>
       </div>
     );
@@ -67,7 +67,7 @@ const DailyHistory = ({ deposits, palierValue, allDeposits, onRemoveDeposit }: D
       <DepositHistory deposits={allDeposits} onRemoveDeposit={onRemoveDeposit}>
         <button className="w-full py-2 cursor-pointer hover:opacity-80 transition-opacity">
           <h3 className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight text-center">
-            History
+            Historique
           </h3>
         </button>
       </DepositHistory>
@@ -83,7 +83,7 @@ const DailyHistory = ({ deposits, palierValue, allDeposits, onRemoveDeposit }: D
                 {formatDate(date)}
               </span>
               <span className="text-sm font-extralight text-foreground/90">
-                +{paliers} milestone{paliers > 1 ? 's' : ''}
+                +{paliers} palier{paliers > 1 ? 's' : ''}
               </span>
             </div>
           );
