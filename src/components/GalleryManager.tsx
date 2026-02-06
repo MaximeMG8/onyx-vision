@@ -187,7 +187,7 @@ const GalleryManager = ({
       }}>
             {/* Header */}
             <header className="flex items-center justify-between p-4 border-b border-border/50">
-              <h2 className="text-lg font-light tracking-wide uppercase text-foreground">
+              <h2 className="tracking-wide uppercase text-foreground text-base text-justify font-thin">
                 Gestionnaire de Galerie
               </h2>
               <div className="flex items-center gap-2">
