@@ -54,8 +54,8 @@ const DreamGoal = () => {
     const deposit = addDeposit(amount);
     if (deposit) {
       toast({
-        title: "Well done! ",
-        description: `+${count} milestone${count > 1 ? 's' : ''} (€${amount}) added!`,
+        title: "Bien joué",
+        description: `+${count} palier${count > 1 ? 's' : ''} (${amount}€) ajouté${count > 1 ? 's' : ''}`,
         duration: 3000
       });
     }
@@ -66,8 +66,8 @@ const DreamGoal = () => {
     if (recentDeposits.length > 0) {
       removeDeposit(recentDeposits[0].id);
       toast({
-        title: "Correction made",
-        description: "Last deposit removed",
+        title: "Correction effectuée",
+        description: "Dernier dépôt supprimé",
         duration: 3000
       });
     }
@@ -96,7 +96,7 @@ const DreamGoal = () => {
   if (!isLoaded || !activeProject) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-muted-foreground font-extralight">Loading...</div>
+        <div className="text-muted-foreground font-extralight">Chargement...</div>
       </div>
     );
   }
@@ -139,7 +139,7 @@ const DreamGoal = () => {
           <button
             onClick={() => navigate("/master-analytics")}
             className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
-            aria-label="Global Analytics"
+            aria-label="Analytiques globales"
           >
             <BarChart2 className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
           </button>
@@ -168,7 +168,7 @@ const DreamGoal = () => {
           </span>
         </div>
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight mt-2">
-          milestones achieved
+          paliers atteints
         </p>
       </div>
 

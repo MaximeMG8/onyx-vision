@@ -28,7 +28,7 @@ const MasterAnalytics = () => {
   }, 0);
   if (!isLoaded) {
     return <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-white/60 text-sm font-light tracking-widest">LOADING...</p>
+        <p className="text-white/60 text-sm font-light tracking-widest">CHARGEMENT...</p>
       </div>;
   }
   return <div className="min-h-screen bg-black text-white overflow-x-hidden">
@@ -36,22 +36,22 @@ const MasterAnalytics = () => {
       <div className="px-6 py-8">
         <button onClick={() => navigate('/')} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-8">
           <ArrowLeft size={18} strokeWidth={1.5} />
-          <span className="text-sm font-light tracking-wide">Back</span>
+          <span className="text-sm font-light tracking-wide">Retour</span>
         </button>
 
         {/* Title */}
         <h1 className="text-center font-light tracking-[0.3em] text-white mb-12 text-base">
-          MASTER PROGRESS ANALYTICS
+          ANALYTIQUES GLOBALES
         </h1>
 
         {/* Portfolio Summary */}
         <div className="max-w-4xl mx-auto mb-12">
           <div className="text-center mb-8">
             <p className="text-white/50 text-xs font-light tracking-[0.2em] uppercase mb-2">
-              Total Portfolio Value
+              Valeur Totale du Portfolio
             </p>
             <p className="text-4xl font-extralight tracking-wide">
-              €{totalPortfolioValue.toLocaleString('de-DE')}
+              {totalPortfolioValue.toLocaleString('fr-FR')}€
             </p>
           </div>
 
@@ -61,7 +61,7 @@ const MasterAnalytics = () => {
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Target size={14} strokeWidth={1} className="text-white/40" />
                 <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
-                  Overall
+                  Global
                 </p>
               </div>
               <p className="text-2xl font-thin">
@@ -73,7 +73,7 @@ const MasterAnalytics = () => {
               <div className="flex items-center justify-center gap-2 mb-1">
                 <TrendingUp size={14} strokeWidth={1} className="text-white/40" />
                 <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
-                  Milestones
+                  Paliers
                 </p>
               </div>
               <p className="text-2xl font-thin">
@@ -85,7 +85,7 @@ const MasterAnalytics = () => {
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Wallet size={14} strokeWidth={1} className="text-white/40" />
                 <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
-                  Active
+                  Actifs
                 </p>
               </div>
               <p className="text-2xl font-thin">
@@ -100,7 +100,7 @@ const MasterAnalytics = () => {
           <div className="border border-white/10 bg-black">
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
               <h2 className="text-[11px] font-light tracking-[0.25em] text-white/50 uppercase">
-                Growth Chart
+                Courbe de Croissance
               </h2>
             </div>
             <div className="p-4">
@@ -114,7 +114,7 @@ const MasterAnalytics = () => {
           <div className="border border-white/10 rounded">
             <div className="px-6 py-3 border-b border-white/5">
               <h3 className="text-[10px] font-light tracking-[0.25em] text-white/40 uppercase">
-                Portfolio Breakdown
+                Répartition du Portfolio
               </h3>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 divide-x divide-white/5">
@@ -131,7 +131,7 @@ const MasterAnalytics = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-light text-white/80 truncate">{project.name}</p>
                       <p className="text-[10px] text-white/30 font-light">
-                        €{projectTotal.toLocaleString('de-DE')}
+                        {projectTotal.toLocaleString('fr-FR')}€
                       </p>
                     </div>
                     <p className="text-sm font-thin text-white/50">

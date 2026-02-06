@@ -60,7 +60,7 @@ const ProjectItem = ({
         </p>
       </div>
       <div className="flex items-center gap-1 flex-shrink-0 relative z-10">
-        <button onClick={onViewProgress} className="p-1.5 hover:bg-white/10 rounded transition-opacity" title="View Progress">
+        <button onClick={onViewProgress} className="p-1.5 hover:bg-white/10 rounded transition-opacity" title="Voir la progression">
           <BarChart3 className="w-4 h-4 text-muted-foreground hover:text-foreground" strokeWidth={1.5} />
         </button>
         {isActive && <Check className="w-4 h-4 text-foreground" strokeWidth={1.5} />}
@@ -72,7 +72,7 @@ const ProjectItem = ({
       {/* Long press hint */}
       {isPressed && <div className="absolute bottom-1 left-0 right-0 text-center z-10">
           <span className="text-[9px] text-white/40 uppercase tracking-wider">
-            Hold to edit...
+            Maintenir pour modifier...
           </span>
         </div>}
     </button>;
@@ -122,16 +122,16 @@ const ProjectSelector = ({
         <SheetContent side="left" className="bg-background border-border/30 w-80">
           <SheetHeader className="text-left">
             <SheetTitle className="text-foreground font-light tracking-wide">
-              My Portfolio
+              Mon Portfolio
             </SheetTitle>
             <SheetDescription className="text-muted-foreground font-extralight">
-              Select a project or create a new one
+              Sélectionnez un projet ou créez-en un nouveau
             </SheetDescription>
           </SheetHeader>
 
           <div className="mt-4 mb-2">
             <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider text-center">
-              Long press to edit project
+              Appui long pour modifier
             </p>
           </div>
 
@@ -142,7 +142,7 @@ const ProjectSelector = ({
           <div className="mt-6">
             <Button variant="outline" onClick={() => setIsCreateOpen(true)} className="w-full border-border/30 hover:bg-card font-extralight">
               <Plus className="mr-2 w-[18px] h-[18px]" strokeWidth={1.5} />
-              New Project
+              Nouveau Projet
             </Button>
           </div>
         </SheetContent>

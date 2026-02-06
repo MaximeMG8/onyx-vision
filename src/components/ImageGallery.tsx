@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ProjectImage, getSortedImages, Project } from '@/types/project';
@@ -13,22 +13,36 @@ interface ImageGalleryProps {
 }
 
 const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: ImageGalleryProps) => {
-  const sortedImages = getSortedImages(project);
+  // Memoize sorted images to prevent recalculation on every render
+  const sortedImages = useMemo(() => getSortedImages(project), [project.images]);
   const hasMultipleImages = sortedImages.length > 1;
+  const hasImages = sortedImages.length > 0;
   
   // Find the favorite image index or default to 0
-  const favoriteIndex = sortedImages.findIndex(img => img.isFavorite);
+  const favoriteIndex = useMemo(() => {
+    return sortedImages.findIndex(img => img.isFavorite);
+  }, [sortedImages]);
   const initialIndex = favoriteIndex >= 0 ? favoriteIndex : 0;
   
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [direction, setDirection] = useState(0);
+  const [isReady, setIsReady] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Force layout ready after initial mount
+  useEffect(() => {
+    // Small delay to ensure DOM is fully ready
+    const timer = requestAnimationFrame(() => {
+      setIsReady(true);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, []);
 
   // Reset index when project changes
   useEffect(() => {
     const newFavoriteIndex = sortedImages.findIndex(img => img.isFavorite);
     setCurrentIndex(newFavoriteIndex >= 0 ? newFavoriteIndex : 0);
-  }, [project.id, sortedImages.length]);
+  }, [project.id, sortedImages]);
 
   // Long press handler for thumbnail
   const { isPressed, progress, handlers } = useLongPress({
@@ -36,30 +50,30 @@ const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: Im
     delay: 2000,
   });
 
-  // Get current image URL
-  const getCurrentImageUrl = (): string => {
-    if (sortedImages.length > 0) {
-      return sortedImages[currentIndex]?.url || luxuryWatch;
+  // Get current image URL - always return a valid URL
+  const currentImageUrl = useMemo((): string => {
+    if (sortedImages.length > 0 && sortedImages[currentIndex]) {
+      return sortedImages[currentIndex].url;
     }
     return project.imageUrl || luxuryWatch;
-  };
-
-  const currentImageUrl = getCurrentImageUrl();
+  }, [sortedImages, currentIndex, project.imageUrl]);
 
   // Notify parent of image changes for color extraction
   useEffect(() => {
-    onImageChange?.(currentImageUrl);
-  }, [currentImageUrl, onImageChange]);
+    if (isReady) {
+      onImageChange?.(currentImageUrl);
+    }
+  }, [currentImageUrl, onImageChange, isReady]);
 
   // Get next thumbnail URL (always returns something for display)
-  const getNextThumbnailUrl = (): string => {
+  const thumbnailUrl = useMemo((): string => {
     if (sortedImages.length > 1) {
       const nextIndex = (currentIndex + 1) % sortedImages.length;
       return sortedImages[nextIndex]?.url || luxuryWatch;
     }
     // Show current image if only one, or default
     return sortedImages[0]?.url || project.imageUrl || luxuryWatch;
-  };
+  }, [sortedImages, currentIndex, project.imageUrl]);
 
   const handleSwipe = (info: PanInfo) => {
     if (!hasMultipleImages) return;
@@ -109,7 +123,21 @@ const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: Im
     }),
   };
 
-  const thumbnailUrl = getNextThumbnailUrl();
+  // Don't render until ready to prevent layout glitch
+  if (!isReady) {
+    return (
+      <div 
+        className="rounded-full overflow-hidden bg-card/20"
+        style={{ width: size, height: size }}
+      >
+        <img
+          src={currentImageUrl}
+          alt={project.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative" ref={containerRef}>
