@@ -131,7 +131,7 @@ const ProjectSelector = ({
 
           <div className="mt-4 mb-2">
             <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider text-center">
-              Appui long pour modifier
+              Appui pour modifier
             </p>
           </div>
 
