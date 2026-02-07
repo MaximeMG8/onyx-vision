@@ -105,8 +105,10 @@ const DreamGoal = () => {
   const ringSize = Math.min(window.innerWidth * 0.6, 280);
   const imageSize = Math.min(window.innerWidth * 0.58, 270);
 
+  const accentHsl = PROJECT_COLORS[activeProject.color].hsl;
+
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center py-6 px-4 gap-6 overflow-x-hidden">
+    <div className="min-h-screen bg-background flex flex-col items-center pt-20 pb-6 px-4 gap-6 overflow-x-hidden">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -116,41 +118,60 @@ const DreamGoal = () => {
         className="hidden"
       />
 
-      {/* Header with Project Selector, History, and Settings */}
-      <header className="w-full max-w-full flex items-center justify-between animate-fade-up">
-        <div className="flex items-center gap-3 flex-1 min-w-0">
-          <div className="flex-shrink-0">
-            <ProjectSelector
-              projects={projects}
-              activeProjectId={activeProjectId}
-              onSwitchProject={switchProject}
-              onCreateProject={createProject}
-              onDeleteProject={deleteProject}
-              onUpdateProject={updateProject}
-            />
+      {/* Sticky Header with Project Selector, History, and Settings */}
+      <header 
+        className="fixed top-0 left-0 right-0 z-50 px-4 py-4 animate-fade-up"
+        style={{
+          background: 'hsla(0, 0%, 0%, 0.85)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+        }}
+      >
+        {/* Neon separator line */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-[1px]"
+          style={{
+            background: `hsl(${accentHsl})`,
+            boxShadow: `0 0 8px hsl(${accentHsl}), 0 0 16px hsl(${accentHsl} / 0.5)`,
+          }}
+        />
+        
+        {/* Header content */}
+        <div className="w-full max-w-full flex items-center justify-between">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="flex-shrink-0">
+              <ProjectSelector
+                projects={projects}
+                activeProjectId={activeProjectId}
+                onSwitchProject={switchProject}
+                onCreateProject={createProject}
+                onDeleteProject={deleteProject}
+                onUpdateProject={updateProject}
+              />
+            </div>
+            
+            <h1 className="uppercase tracking-[0.25em] text-muted-foreground truncate font-bold text-base">
+              {activeProject.name}
+            </h1>
           </div>
           
-          <h1 className="uppercase tracking-[0.25em] text-muted-foreground truncate font-bold text-base">
-            {activeProject.name}
-          </h1>
-        </div>
-        
-        <div className="flex items-center gap-0.5 flex-shrink-0">
-          <button
-            onClick={() => navigate("/master-analytics")}
-            className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
-            aria-label="Analytiques globales"
-          >
-            <BarChart2 className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
-          </button>
-          
-          <button
-            onClick={() => navigate("/settings")}
-            className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
-            aria-label="Paramètres"
-          >
-            <Settings className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
-          </button>
+          <div className="flex items-center gap-0.5 flex-shrink-0">
+            <button
+              onClick={() => navigate("/master-analytics")}
+              className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
+              aria-label="Analytiques globales"
+            >
+              <BarChart2 className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
+            </button>
+            
+            <button
+              onClick={() => navigate("/settings")}
+              className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
+              aria-label="Paramètres"
+            >
+              <Settings className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
+            </button>
+          </div>
         </div>
       </header>
 
