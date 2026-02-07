@@ -257,6 +257,7 @@ const DreamGoal = () => {
         images={projectImages}
         onImagesChange={updateProjectImages}
         maxImages={10}
+        accentColor={activeProject ? PROJECT_COLORS[activeProject.color].hsl : '0 0% 100%'}
       />
     </div>
   );
