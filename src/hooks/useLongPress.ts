@@ -5,13 +5,22 @@ interface UseLongPressOptions {
   delay?: number;
   onStart?: () => void;
   onCancel?: () => void;
+  enableHaptic?: boolean;
 }
+
+// Trigger haptic feedback if available
+const triggerHaptic = () => {
+  if (navigator.vibrate) {
+    navigator.vibrate(50); // 50ms vibration
+  }
+};
 
 export const useLongPress = ({
   onLongPress,
-  delay = 3000,
+  delay = 500,
   onStart,
   onCancel,
+  enableHaptic = false,
 }: UseLongPressOptions) => {
   const [isPressed, setIsPressed] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -33,10 +42,13 @@ export const useLongPress = ({
     }, 50);
 
     timerRef.current = setTimeout(() => {
+      if (enableHaptic) {
+        triggerHaptic();
+      }
       onLongPress();
       cancel();
     }, delay);
-  }, [delay, onLongPress, onStart]);
+  }, [delay, onLongPress, onStart, enableHaptic]);
 
   const cancel = useCallback(() => {
     if (timerRef.current) {
