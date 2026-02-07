@@ -3,15 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { X, Star, Trash2, Plus, GripVertical } from 'lucide-react';
+import { X, Star, Trash2, Plus } from 'lucide-react';
 import { ProjectImage } from '@/types/project';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+
+// Neon red color for active states
+const NEON_RED = '0 100% 50%';
+
 interface SortableImageProps {
   image: ProjectImage;
   onSetFavorite: (id: string) => void;
   onDelete: (id: string) => void;
 }
+
 const SortableImage = ({
   image,
   onSetFavorite,
@@ -27,36 +32,91 @@ const SortableImage = ({
   } = useSortable({
     id: image.id
   });
+  
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 10 : 1
   };
-  return <motion.div ref={setNodeRef} style={style} className={`relative aspect-square rounded-xl overflow-hidden bg-card border border-border/50 ${isDragging ? 'opacity-50 scale-105' : ''}`} layout>
-      <img src={image.url} alt="Gallery image" className="w-full h-full object-cover rounded-full" />
 
-      {/* Drag handle */}
-      <div {...attributes} {...listeners} className="absolute top-2 left-1/2 -translate-x-1/2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm cursor-grab active:cursor-grabbing opacity-60 hover:opacity-100 transition-opacity">
-        <GripVertical className="w-4 h-4 text-foreground" strokeWidth={1.5} />
-      </div>
+  // Handle button clicks without triggering drag
+  const handleButtonClick = (e: React.MouseEvent, callback: () => void) => {
+    e.stopPropagation();
+    e.preventDefault();
+    callback();
+  };
 
-      {/* Star/Favorite button */}
-      <button onClick={() => onSetFavorite(image.id)} className="absolute top-2 right-2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm transition-all hover:scale-110" aria-label={image.isFavorite ? 'Current favorite' : 'Set as favorite'}>
-        <Star className={`w-4 h-4 transition-colors ${image.isFavorite ? 'fill-yellow-400 text-yellow-400' : 'text-foreground/60 hover:text-yellow-400'}`} strokeWidth={1.5} />
+  return (
+    <motion.div 
+      ref={setNodeRef} 
+      style={style} 
+      className={`relative aspect-square rounded-xl overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-200 ${
+        isDragging 
+          ? 'scale-105 shadow-2xl' 
+          : 'hover:scale-[1.02]'
+      }`}
+      {...attributes}
+      {...listeners}
+      layout
+    >
+      {/* Image */}
+      <img src={image.url} alt="Gallery image" className="w-full h-full object-cover" />
+      
+      {/* Dragging overlay with neon red border */}
+      {isDragging && (
+        <div 
+          className="absolute inset-0 rounded-xl pointer-events-none"
+          style={{
+            border: `2px solid hsl(${NEON_RED})`,
+            boxShadow: `0 0 20px hsl(${NEON_RED}), 0 0 40px hsl(${NEON_RED} / 0.5), inset 0 0 20px hsl(${NEON_RED} / 0.1)`,
+          }}
+        />
+      )}
+
+      {/* Star/Favorite button - Top Left */}
+      <button 
+        onClick={(e) => handleButtonClick(e, () => onSetFavorite(image.id))} 
+        onPointerDown={(e) => e.stopPropagation()}
+        className="absolute top-2 left-2 p-1 transition-all hover:scale-110 z-10" 
+        aria-label={image.isFavorite ? 'Image principale' : 'Définir comme principale'}
+      >
+        <Star 
+          className="w-5 h-5 transition-all" 
+          strokeWidth={1.5}
+          style={image.isFavorite ? {
+            fill: 'hsl(0 0% 100%)',
+            color: 'hsl(0 0% 100%)',
+            filter: `drop-shadow(0 0 6px hsl(${NEON_RED})) drop-shadow(0 0 12px hsl(${NEON_RED}))`,
+          } : {
+            fill: 'transparent',
+            color: 'hsl(0 0% 100% / 0.6)',
+          }}
+        />
       </button>
 
-      {/* Delete button */}
-      <button onClick={() => onDelete(image.id)} className="absolute top-2 left-2 p-1.5 rounded-full bg-background/80 backdrop-blur-sm transition-all hover:scale-110 hover:bg-destructive/80" aria-label="Delete image">
-        <Trash2 className="w-4 h-4 text-destructive" strokeWidth={1.5} />
+      {/* Delete button - Top Right */}
+      <button 
+        onClick={(e) => handleButtonClick(e, () => onDelete(image.id))} 
+        onPointerDown={(e) => e.stopPropagation()}
+        className="absolute top-2 right-2 p-1 transition-all hover:scale-110 z-10" 
+        aria-label="Supprimer l'image"
+      >
+        <Trash2 
+          className="w-4 h-4 text-destructive/70 hover:text-destructive transition-colors" 
+          strokeWidth={1.25} 
+        />
       </button>
 
       {/* Favorite badge */}
-      {image.isFavorite && <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-background/90 backdrop-blur-sm">
+      {image.isFavorite && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-background/80 backdrop-blur-sm">
           <span className="text-[10px] uppercase tracking-wider text-foreground font-medium">
             Principale
           </span>
-        </div>}
-    </motion.div>;
+        </div>
+      )}
+    </motion.div>
+  );
 };
 interface GalleryManagerProps {
   isOpen: boolean;
@@ -77,13 +137,18 @@ const GalleryManager = ({
   } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const sensors = useSensors(useSensor(PointerSensor, {
-    activationConstraint: {
-      distance: 8
-    }
-  }), useSensor(KeyboardSensor, {
-    coordinateGetter: sortableKeyboardCoordinates
-  }));
+  // Long press to drag (500ms delay)
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        delay: 500,
+        tolerance: 5,
+      }
+    }), 
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates
+    })
+  );
   const handleDragEnd = (event: DragEndEvent) => {
     const {
       active,

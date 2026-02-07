@@ -47,7 +47,8 @@ const ImageGallery = ({ project, size, onOpenGalleryManager, onImageChange }: Im
   // Long press handler for thumbnail
   const { isPressed, progress, handlers } = useLongPress({
     onLongPress: onOpenGalleryManager,
-    delay: 2000,
+    delay: 500,
+    enableHaptic: true,
   });
 
   // Get current image URL - always return a valid URL
