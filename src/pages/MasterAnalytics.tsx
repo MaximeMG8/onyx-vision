@@ -31,64 +31,64 @@ const MasterAnalytics = () => {
         <p className="text-white/60 text-sm font-light tracking-widest">CHARGEMENT...</p>
       </div>;
   }
-  return <div className="min-h-screen bg-black text-white overflow-x-hidden">
+  return <div className="w-full min-h-screen bg-black text-white overflow-x-hidden">
       {/* Header */}
-      <div className="px-6 py-8">
-        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-8">
+      <div className="px-4 sm:px-6 py-6 sm:py-8">
+        <button onClick={() => navigate('/')} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-6 sm:mb-8">
           <ArrowLeft size={18} strokeWidth={1.5} />
-          <span className="text-sm font-light tracking-wide">Retour</span>
+          <span className="text-xs sm:text-sm font-light tracking-wide">Retour</span>
         </button>
 
         {/* Title */}
-        <h1 className="text-center font-light tracking-[0.3em] text-white mb-12 text-base">
+        <h1 className="text-center font-light tracking-[0.2em] sm:tracking-[0.3em] text-white mb-8 sm:mb-12 text-sm sm:text-base">
           ANALYTIQUES GLOBALES
         </h1>
 
         {/* Portfolio Summary */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="text-center mb-8">
-            <p className="text-white/50 text-xs font-light tracking-[0.2em] uppercase mb-2">
+        <div className="w-full max-w-4xl mx-auto mb-8 sm:mb-12">
+          <div className="text-center mb-6 sm:mb-8">
+            <p className="text-white/50 text-xs font-light tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-2">
               Valeur Totale du Portfolio
             </p>
-            <p className="text-4xl font-extralight tracking-wide">
+            <p className="text-3xl sm:text-4xl font-extralight tracking-wide">
               {totalPortfolioValue.toLocaleString('fr-FR')}€
             </p>
           </div>
 
         {/* Key Metrics - Compact */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="border border-white/10 p-4 text-center rounded">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <Target size={14} strokeWidth={1} className="text-white/40" />
-                <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4">
+            <div className="border border-white/10 p-3 sm:p-4 text-center rounded">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1">
+                <Target size={12} strokeWidth={1} className="text-white/40 sm:w-[14px] sm:h-[14px]" />
+                <p className="text-white/40 text-[9px] sm:text-[10px] font-light tracking-wider sm:tracking-widest uppercase">
                   Global
                 </p>
               </div>
-              <p className="text-2xl font-thin">
+              <p className="text-xl sm:text-2xl font-thin">
                 {overallProgress.toFixed(1)}%
               </p>
             </div>
 
-            <div className="border border-white/10 p-4 text-center rounded">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <TrendingUp size={14} strokeWidth={1} className="text-white/40" />
-                <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
+            <div className="border border-white/10 p-3 sm:p-4 text-center rounded">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1">
+                <TrendingUp size={12} strokeWidth={1} className="text-white/40 sm:w-[14px] sm:h-[14px]" />
+                <p className="text-white/40 text-[9px] sm:text-[10px] font-light tracking-wider sm:tracking-widest uppercase">
                   Paliers
                 </p>
               </div>
-              <p className="text-2xl font-thin">
+              <p className="text-xl sm:text-2xl font-thin">
                 {totalMilestones}
               </p>
             </div>
 
-            <div className="border border-white/10 p-4 text-center rounded">
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <Wallet size={14} strokeWidth={1} className="text-white/40" />
-                <p className="text-white/40 text-[10px] font-light tracking-widest uppercase">
+            <div className="border border-white/10 p-3 sm:p-4 text-center rounded">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-1">
+                <Wallet size={12} strokeWidth={1} className="text-white/40 sm:w-[14px] sm:h-[14px]" />
+                <p className="text-white/40 text-[9px] sm:text-[10px] font-light tracking-wider sm:tracking-widest uppercase">
                   Actifs
                 </p>
               </div>
-              <p className="text-2xl font-thin">
+              <p className="text-xl sm:text-2xl font-thin">
                 {projects.length}
               </p>
             </div>
@@ -96,24 +96,24 @@ const MasterAnalytics = () => {
         </div>
 
         {/* Master Chart - Full Width Sharp Rectangle */}
-        <div className="w-full px-0">
+        <div className="w-full">
           <div className="border border-white/10 bg-black">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-              <h2 className="text-[11px] font-light tracking-[0.25em] text-white/50 uppercase">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5">
+              <h2 className="text-[10px] sm:text-[11px] font-light tracking-[0.2em] sm:tracking-[0.25em] text-white/50 uppercase">
                 Courbe de Croissance
               </h2>
             </div>
-            <div className="p-4">
+            <div className="p-2 sm:p-4">
               <MasterProgressChart projects={projects} allDeposits={allDeposits} />
             </div>
           </div>
         </div>
 
         {/* Project Breakdown - Minimal */}
-        <div className="w-full px-6 mt-6">
+        <div className="w-full mt-4 sm:mt-6">
           <div className="border border-white/10 rounded">
-            <div className="px-6 py-3 border-b border-white/5">
-              <h3 className="text-[10px] font-light tracking-[0.25em] text-white/40 uppercase">
+            <div className="px-4 sm:px-6 py-2 sm:py-3 border-b border-white/5">
+              <h3 className="text-[9px] sm:text-[10px] font-light tracking-[0.2em] sm:tracking-[0.25em] text-white/40 uppercase">
                 Répartition du Portfolio
               </h3>
             </div>
@@ -123,8 +123,8 @@ const MasterAnalytics = () => {
               const projectTotal = projectDeposits.reduce((s, d) => s + d.amount, 0);
               const projectProgress = projectTotal / project.targetAmount * 100;
               const color = project.color === 'white' ? '#FFFFFF' : project.color === 'red' ? '#EF4444' : project.color === 'blue' ? '#3B82F6' : project.color === 'yellow' ? '#EAB308' : project.color === 'green' ? '#10B981' : project.color === 'purple' ? '#A855F7' : '#FFFFFF';
-              return <div key={project.id} className="p-4 flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full" style={{
+              return <div key={project.id} className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3">
+                    <div className="w-2 h-2 rounded-full flex-shrink-0" style={{
                   backgroundColor: color,
                   boxShadow: `0 0 6px ${color}`
                 }} />
@@ -134,7 +134,7 @@ const MasterAnalytics = () => {
                         {projectTotal.toLocaleString('fr-FR')}€
                       </p>
                     </div>
-                    <p className="text-sm font-thin text-white/50">
+                    <p className="text-xs sm:text-sm font-thin text-white/50 flex-shrink-0">
                       {projectProgress.toFixed(0)}%
                     </p>
                   </div>;

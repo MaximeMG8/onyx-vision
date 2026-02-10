@@ -133,9 +133,9 @@ const Settings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col py-6 px-6">
+    <div className="w-full min-h-screen bg-background flex flex-col py-6 px-4 sm:px-6">
       {/* Header */}
-      <header className="flex items-center gap-4 mb-12">
+      <header className="flex items-center gap-3 sm:gap-4 mb-8 sm:mb-12">
         <button
           onClick={() => navigate("/")}
           className="w-10 h-10 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
@@ -143,27 +143,27 @@ const Settings = () => {
         >
           <ArrowLeft className="w-5 h-5 text-muted-foreground" strokeWidth={1.5} />
         </button>
-        <h1 className="text-xs uppercase tracking-[0.5em] text-muted-foreground font-extralight">
+        <h1 className="text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] text-muted-foreground font-extralight">
           Configuration
         </h1>
       </header>
 
       {/* Project Name */}
-      <div className="mb-10">
+      <div className="mb-8 sm:mb-10">
         <p className="text-sm text-muted-foreground font-extralight mb-1">Projet actif</p>
-        <p className="text-xl font-extralight" style={{ color: 'hsl(var(--accent-color))' }}>
+        <p className="text-lg sm:text-xl font-extralight" style={{ color: 'hsl(var(--accent-color))' }}>
           {activeProject.name}
         </p>
       </div>
 
       {/* Settings Form */}
-      <div className="space-y-10 max-w-sm">
+      <div className="space-y-8 sm:space-y-10 w-full max-w-md">
         {/* Target Amount */}
         <div className="space-y-3">
           <label className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight">
             Objectif Total (€)
           </label>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Input
               type="number"
               value={targetAmount}
@@ -174,7 +174,7 @@ const Settings = () => {
             <Button
               onClick={handleSaveTarget}
               variant="outline"
-              className="border-border/30 hover:border-foreground/50 font-extralight"
+              className="border-border/30 hover:border-foreground/50 font-extralight w-full sm:w-auto"
             >
               Appliquer
             </Button>
@@ -189,7 +189,7 @@ const Settings = () => {
           <label className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight">
             Valeur du Palier (€)
           </label>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Input
               type="number"
               value={palierValue}
@@ -200,7 +200,7 @@ const Settings = () => {
             <Button
               onClick={handleSavePalier}
               variant="outline"
-              className="border-border/30 hover:border-foreground/50 font-extralight"
+              className="border-border/30 hover:border-foreground/50 font-extralight w-full sm:w-auto"
             >
               Appliquer
             </Button>

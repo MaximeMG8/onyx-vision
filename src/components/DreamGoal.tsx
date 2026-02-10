@@ -102,13 +102,15 @@ const DreamGoal = () => {
   }
 
   const projectImages = getProjectImages();
-  const ringSize = Math.min(window.innerWidth * 0.6, 280);
-  const imageSize = Math.min(window.innerWidth * 0.58, 270);
+  // Calcul responsive et fluide des tailles - Mobile First
+  const screenWidth = typeof window !== 'undefined' ? window.innerWidth : 375;
+  const ringSize = screenWidth < 640 ? Math.min(screenWidth * 0.75, 320) : Math.min(screenWidth * 0.5, 380);
+  const imageSize = ringSize * 0.96;
 
   const accentHsl = PROJECT_COLORS[activeProject.color].hsl;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center pt-20 pb-6 px-4 gap-6 overflow-x-hidden">
+    <div className="w-full min-h-screen bg-background flex flex-col items-center pt-16 pb-8 px-3 sm:px-6 gap-4 sm:gap-6 overflow-x-hidden">
       {/* Hidden file input */}
       <input
         ref={fileInputRef}
@@ -119,8 +121,8 @@ const DreamGoal = () => {
       />
 
       {/* Sticky Header with Project Selector, History, and Settings */}
-      <header 
-        className="fixed top-0 left-0 right-0 z-50 px-4 py-4 animate-fade-up"
+      <header
+        className="fixed top-0 left-0 right-0 z-50 px-3 sm:px-6 py-3 sm:py-4 animate-fade-up"
         style={{
           background: 'hsla(0, 0%, 0%, 0.85)',
           backdropFilter: 'blur(12px)',
@@ -128,16 +130,16 @@ const DreamGoal = () => {
         }}
       >
         {/* Neon separator line */}
-        <div 
+        <div
           className="absolute bottom-0 left-0 right-0 h-[1px]"
           style={{
             background: `hsl(${accentHsl})`,
             boxShadow: `0 0 8px hsl(${accentHsl}), 0 0 16px hsl(${accentHsl} / 0.5)`,
           }}
         />
-        
+
         {/* Header content */}
-        <div className="w-full max-w-full flex items-center justify-between">
+        <div className="w-full flex items-center justify-between gap-2">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <div className="flex-shrink-0">
               <ProjectSelector
@@ -150,12 +152,12 @@ const DreamGoal = () => {
               />
             </div>
             
-            <h1 className="uppercase tracking-[0.25em] text-muted-foreground truncate font-bold text-base">
+            <h1 className="uppercase tracking-[0.15em] sm:tracking-[0.25em] text-muted-foreground truncate font-bold text-sm sm:text-base">
               {activeProject.name}
             </h1>
           </div>
-          
-          <div className="flex items-center gap-0.5 flex-shrink-0">
+
+          <div className="flex items-center gap-1 flex-shrink-0">
             <button
               onClick={() => navigate("/master-analytics")}
               className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
@@ -176,25 +178,25 @@ const DreamGoal = () => {
       </header>
 
       {/* Paliers Counter - Big Display */}
-      <div className="text-center animate-fade-up" style={{ animationDelay: '0.1s' }}>
+      <div className="w-full text-center animate-fade-up" style={{ animationDelay: '0.1s' }}>
         <div className="flex items-baseline justify-center gap-2">
           <AnimatedCounter
             value={currentPaliers}
             showCurrency={false}
-            className="text-5xl font-extralight tracking-tight"
+            className="text-4xl sm:text-5xl font-extralight tracking-tight"
             style={{ color: 'hsl(var(--accent-color))' }}
           />
-          <span className="text-2xl font-extralight text-muted-foreground">
+          <span className="text-xl sm:text-2xl font-extralight text-muted-foreground">
             / {totalPaliers}
           </span>
         </div>
-        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-extralight mt-2">
+        <p className="text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground font-extralight mt-2">
           paliers atteints
         </p>
       </div>
 
       {/* Luxury Progress Bar */}
-      <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.15s' }}>
+      <div className="w-full max-w-md px-2 animate-fade-up" style={{ animationDelay: '0.15s' }}>
         <LuxuryProgressBar current={currentPaliers} total={totalPaliers} />
         <div className="flex justify-between mt-3 text-xs text-muted-foreground font-extralight tracking-wide">
           <span>0€</span>
@@ -206,7 +208,7 @@ const DreamGoal = () => {
       </div>
 
       {/* Progress Ring with Image Gallery - Always show gallery component for thumbnail */}
-      <div className="animate-scale-in relative">
+      <div className="w-full flex justify-center animate-scale-in relative px-2">
         <ProgressRing progress={progress} size={ringSize} strokeWidth={2} glowColor={dominantColor}>
           <ImageGallery
             project={activeProject}
@@ -218,7 +220,7 @@ const DreamGoal = () => {
       </div>
 
       {/* Palier Controls */}
-      <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.3s' }}>
+      <div className="w-full max-w-md px-2 animate-fade-up" style={{ animationDelay: '0.3s' }}>
         <PalierControls
           onAdd={handleAddPaliers}
           onRemove={handleRemovePaliers}
@@ -227,9 +229,9 @@ const DreamGoal = () => {
       </div>
 
       {/* Daily History */}
-      <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.4s' }}>
-        <DailyHistory 
-          deposits={deposits} 
+      <div className="w-full max-w-md px-2 animate-fade-up" style={{ animationDelay: '0.4s' }}>
+        <DailyHistory
+          deposits={deposits}
           palierValue={activeProject.palierValue}
           allDeposits={getRecentDeposits(20)}
           onRemoveDeposit={removeDeposit}
@@ -237,8 +239,8 @@ const DreamGoal = () => {
       </div>
 
       {/* Analytics Chart */}
-      <div className="w-full max-w-sm animate-fade-up" style={{ animationDelay: '0.45s' }}>
-        <ProgressChart 
+      <div className="w-full max-w-md px-2 animate-fade-up" style={{ animationDelay: '0.45s' }}>
+        <ProgressChart
           deposits={deposits}
           targetAmount={activeProject.targetAmount}
           accentColor={PROJECT_COLORS[activeProject.color].hsl}
@@ -246,7 +248,7 @@ const DreamGoal = () => {
       </div>
 
       {/* Calendar */}
-      <div className="w-full mt-2 animate-fade-up" style={{ animationDelay: '0.5s' }}>
+      <div className="w-full max-w-2xl px-2 mt-2 animate-fade-up" style={{ animationDelay: '0.5s' }}>
         <DepositCalendar depositDays={depositDays} />
       </div>
 

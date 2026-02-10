@@ -46,22 +46,22 @@ const ProjectDashboard = () => {
 
   // Calculate days remaining if deadline is set
   const daysRemaining = project.deadline ? differenceInDays(new Date(project.deadline), new Date()) : null;
-  return <div className="min-h-screen bg-black text-white">
+  return <div className="w-full min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="px-6 py-4 flex items-center justify-between border-b border-white/10">
+      <header className="px-4 sm:px-6 py-4 flex items-center justify-between border-b border-white/10">
         <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="text-white/80 hover:text-white hover:bg-transparent p-0">
-          <ArrowLeft className="w-5 h-5 mr-2 border-0" strokeWidth={1.5} />
-          <span className="uppercase tracking-[0.2em] font-extralight text-sm">Back</span>
+          <ArrowLeft className="w-5 h-5 mr-1 sm:mr-2 border-0" strokeWidth={1.5} />
+          <span className="uppercase tracking-[0.15em] sm:tracking-[0.2em] font-extralight text-xs sm:text-sm">Back</span>
         </Button>
-        
-        <h1 className="uppercase tracking-[0.3em] text-right text-base font-semibold">
+
+        <h1 className="uppercase tracking-[0.2em] sm:tracking-[0.3em] text-right text-sm sm:text-base font-semibold truncate max-w-[50%]">
           {project.name}
         </h1>
-        
-        <div className="w-20" />
+
+        <div className="w-12 sm:w-20" />
       </header>
 
-      <main className="px-6 py-8 max-w-2xl mx-auto space-y-10">
+      <main className="w-full px-4 sm:px-6 py-6 sm:py-8 max-w-2xl mx-auto space-y-8 sm:space-y-10">
         {/* Deadline Countdown - Only show if deadline is set */}
         {daysRemaining !== null && <section className="border border-white/10 rounded-lg p-4">
             <div className="flex items-center justify-center gap-3">
