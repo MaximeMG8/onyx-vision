@@ -140,20 +140,22 @@ const DreamGoal = () => {
 
         {/* Header content */}
         <div className="w-full flex items-center justify-between gap-2">
-          <div className="flex-shrink-0" onClick={() => navigate("/portfolio")}>
-            <ProjectSelector
-              projects={projects}
-              activeProjectId={activeProjectId}
-              onSwitchProject={switchProject}
-              onCreateProject={createProject}
-              onDeleteProject={deleteProject}
-              onUpdateProject={updateProject}
-            />
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="flex-shrink-0">
+              <ProjectSelector
+                projects={projects}
+                activeProjectId={activeProjectId}
+                onSwitchProject={switchProject}
+                onCreateProject={createProject}
+                onDeleteProject={deleteProject}
+                onUpdateProject={updateProject}
+              />
+            </div>
+            
+            <h1 className="uppercase tracking-[0.15em] sm:tracking-[0.25em] text-muted-foreground truncate font-bold text-sm sm:text-base">
+              {activeProject.name}
+            </h1>
           </div>
-
-          <h1 className="uppercase tracking-[0.15em] sm:tracking-[0.25em] text-muted-foreground truncate font-bold text-sm sm:text-base flex-1 text-center">
-            {activeProject.name}
-          </h1>
 
           <div className="flex items-center gap-1 flex-shrink-0">
             <button
@@ -163,7 +165,7 @@ const DreamGoal = () => {
             >
               <BarChart2 className="text-muted-foreground w-[18px] h-[18px]" strokeWidth={1.5} />
             </button>
-
+            
             <button
               onClick={() => navigate("/settings")}
               className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
