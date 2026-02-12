@@ -9,7 +9,7 @@ import DepositHistory from "./DepositHistory";
 import DepositCalendar from "./DepositCalendar";
 import ProgressChart from "./ProgressChart";
 import AnimatedCounter from "./AnimatedCounter";
-import ProjectSelector from "./ProjectSelector";
+import Portfolio from "@/pages/Portfolio";
 import ImageGallery from "./ImageGallery";
 import GalleryManager from "./GalleryManager";
 import { useProjectManager } from "@/hooks/useProjectManager";
@@ -140,8 +140,8 @@ const DreamGoal = () => {
 
         {/* Header content */}
         <div className="w-full flex items-center justify-between gap-2">
-          <div className="flex-shrink-0" onClick={() => navigate("/portfolio")}>
-            <ProjectSelector
+          <div className="flex-shrink-0">
+            <Portfolio
               projects={projects}
               activeProjectId={activeProjectId}
               onSwitchProject={switchProject}

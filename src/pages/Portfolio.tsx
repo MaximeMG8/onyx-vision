@@ -1,8 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Check, Pin, Trash2 } from 'lucide-react';
+import { Plus, Check, Pin, Trash2, User, BarChart2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Project, PROJECT_COLORS, ProjectColor } from '@/types/project';
 import CreateProjectDialog from '@/components/CreateProjectDialog';
 import EditProjectDialog from '@/components/EditProjectDialog';
@@ -11,38 +16,41 @@ import { useLongPress } from '@/hooks/useLongPress';
 interface ProjectItemProps {
   project: Project;
   isActive: boolean;
-  projectsCount: number;
+  isSwipeOpen: boolean;
   onSelect: () => void;
   onDelete: () => void;
   onPin: () => void;
   onLongPress: () => void;
+  onSwipeChange: (isOpen: boolean) => void;
+  closeOthers: () => void;
 }
 
 const ProjectItem = ({
   project,
   isActive,
-  projectsCount,
+  isSwipeOpen,
   onSelect,
   onDelete,
   onPin,
-  onLongPress
+  onLongPress,
+  onSwipeChange,
+  closeOthers
 }: ProjectItemProps) => {
   const colorConfig = PROJECT_COLORS[project.color];
-  const [isRevealed, setIsRevealed] = useState(false);
-  const dragRef = useRef(0);
   const { isPressed, progress, handlers } = useLongPress({
     onLongPress,
     delay: 3000
   });
 
   const handleDragEnd = (e: any) => {
-    const velocity = e.velocity?.x || 0;
     const offset = e.offset?.x || 0;
+    const velocity = e.velocity?.x || 0;
 
-    if (offset < -60 || velocity < -500) {
-      setIsRevealed(true);
+    if (offset > 60 || velocity > 500) {
+      closeOthers();
+      onSwipeChange(true);
     } else {
-      setIsRevealed(false);
+      onSwipeChange(false);
     }
   };
 
@@ -55,48 +63,53 @@ const ProjectItem = ({
     >
       <motion.div
         drag="x"
-        dragElastic={0.15}
+        dragElastic={0.1}
         dragMomentum={false}
         onDragEnd={handleDragEnd}
+        animate={{ x: isSwipeOpen ? 80 : 0 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className="relative"
       >
         {/* Background actions panel */}
-        <div className="absolute inset-0 flex items-center justify-end gap-2 pr-4 bg-gradient-to-l from-red-600/20 via-red-500/10 to-transparent pointer-events-none rounded-lg">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isRevealed ? 1 : 0 }}
-            transition={{ duration: 0.2 }}
-            className="flex items-center gap-2 pointer-events-auto"
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onPin();
-                setIsRevealed(false);
-              }}
-              className="flex items-center justify-center w-10 h-10 border border-white/30 hover:border-white/50 text-white hover:bg-white/10 rounded-lg transition-all"
-            >
-              <Pin className="w-4 h-4" strokeWidth={1.5} />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-                setIsRevealed(false);
-              }}
-              className="flex items-center justify-center w-10 h-10 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-all"
-            >
-              <Trash2 className="w-4 h-4" strokeWidth={1.5} />
-            </button>
-          </motion.div>
+        <div className="absolute inset-0 flex items-center justify-end gap-2 pr-4 bg-black pointer-events-none rounded-lg">
+          <AnimatePresence>
+            {isSwipeOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="flex items-center gap-2 pointer-events-auto"
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPin();
+                  }}
+                  className="flex items-center justify-center w-9 h-9 border border-white/30 hover:border-white/50 text-white/70 hover:text-white hover:bg-white/5 rounded transition-all"
+                >
+                  <Pin className="w-4 h-4" strokeWidth={1.5} />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete();
+                  }}
+                  className="flex items-center justify-center w-9 h-9 border border-white/30 hover:border-white/50 text-white/70 hover:text-white hover:bg-white/5 rounded transition-all"
+                >
+                  <Trash2 className="w-4 h-4" strokeWidth={1.5} />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Main card */}
         <motion.button
           onClick={onSelect}
           {...handlers}
-          className="w-full flex items-center gap-3 p-4 rounded-lg transition-all duration-300 text-left relative bg-black/40 border border-white/10 hover:border-white/20 cursor-grab active:cursor-grabbing"
-          whileHover={{ borderColor: 'rgba(255,255,255,0.3)' }}
+          className="w-full flex items-center gap-3 p-4 rounded-lg transition-all duration-300 text-left relative bg-black border border-white/10 hover:border-white/20 cursor-grab active:cursor-grabbing"
+          whileHover={{ borderColor: 'rgba(255,255,255,0.2)' }}
         >
           {/* Long press progress indicator */}
           {isPressed && (
@@ -162,23 +175,26 @@ const Portfolio = ({
   onUpdateProject
 }: PortfolioProps) => {
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [openSwipeId, setOpenSwipeId] = useState<string | null>(null);
 
   const handleSelectProject = (projectId: string) => {
     onSwitchProject(projectId);
-    navigate('/');
+    setIsOpen(false);
   };
 
   const handleCreateProject = (name: string, targetAmount: number, color: ProjectColor, palierValue: number) => {
     const newProject = onCreateProject(name, targetAmount, color, palierValue);
     onSwitchProject(newProject.id);
-    navigate('/');
+    setIsCreateOpen(false);
   };
 
   const handleDeleteProject = (projectId: string) => {
     if (projects.length > 1) {
       onDeleteProject(projectId);
+      setOpenSwipeId(null);
     }
   };
 
@@ -190,69 +206,98 @@ const Portfolio = ({
     console.log('Pin project:', projectId);
   };
 
+  const closeAllSwipes = useCallback(() => {
+    setOpenSwipeId(null);
+  }, []);
+
   return (
-    <div className="w-full min-h-screen bg-black text-white flex flex-col">
-      {/* Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 flex items-center justify-center border-b border-white/10 bg-black/95 backdrop-blur-md">
-        <button
-          onClick={() => navigate('/')}
-          className="absolute left-4 sm:left-6 w-9 h-9 flex items-center justify-center rounded-full transition-all hover:bg-white/10"
-          aria-label="Retour"
-        >
-          <ArrowLeft className="w-[18px] h-[18px]" strokeWidth={1.5} />
-        </button>
+    <>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger asChild>
+          <button
+            onClick={() => navigate('/portfolio')}
+            className="w-9 h-9 flex items-center justify-center rounded-full transition-all duration-300 hover:bg-card/50"
+            aria-label="Portfolio"
+          >
+            <svg className="w-[18px] h-[18px] text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M3 7a2 2 0 012-2h14a2 2 0 012 2m0 0V5a2 2 0 00-2-2H5a2 2 0 00-2 2v2" />
+            </svg>
+          </button>
+        </SheetTrigger>
+        <SheetContent side="left" className="bg-black border-white/10 w-80 p-0 flex flex-col">
+          {/* Header */}
+          <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-all"
+              aria-label="Profile"
+            >
+              <User className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+            </button>
 
-        <h1 className="text-center uppercase tracking-[0.25em] sm:tracking-[0.35em] font-light text-base sm:text-lg">
-          Mon Portfolio
-        </h1>
-      </div>
+            <h2 className="text-center uppercase tracking-[0.2em] font-light text-white text-sm flex-1">
+              Mes Projets
+            </h2>
 
-      {/* Content */}
-      <div className="flex-1 pt-20 pb-8 px-4 sm:px-6 overflow-y-auto">
-        <div className="max-w-2xl mx-auto">
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                navigate('/master-analytics');
+              }}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-all"
+              aria-label="Analytics"
+            >
+              <BarChart2 className="w-4 h-4 text-white/70" strokeWidth={1.5} />
+            </button>
+          </div>
+
           {/* Instructions */}
-          <div className="mb-6 text-center">
-            <p className="text-xs text-white/60 uppercase tracking-wider font-extralight">
+          <div className="px-6 py-3 border-b border-white/10">
+            <p className="text-[10px] text-white/50 uppercase tracking-wider text-center font-extralight">
               Glissez à droite pour révéler les actions
             </p>
           </div>
 
           {/* Project List */}
-          <div className="space-y-3">
-            {projects.length === 0 ? (
-              <p className="text-center text-white/40 font-extralight py-8">
-                Aucun projet pour le moment
-              </p>
-            ) : (
-              <AnimatePresence mode="popLayout">
-                {projects.map((project) => (
-                  <ProjectItem
-                    key={project.id}
-                    project={project}
-                    isActive={project.id === activeProjectId}
-                    projectsCount={projects.length}
-                    onSelect={() => handleSelectProject(project.id)}
-                    onDelete={() => handleDeleteProject(project.id)}
-                    onPin={() => handlePin(project.id)}
-                    onLongPress={() => handleLongPress(project)}
-                  />
-                ))}
-              </AnimatePresence>
-            )}
+          <div className="flex-1 overflow-y-auto px-4 py-4">
+            <div className="space-y-2">
+              {projects.length === 0 ? (
+                <p className="text-center text-white/40 font-extralight py-8 text-xs">
+                  Aucun projet pour le moment
+                </p>
+              ) : (
+                <AnimatePresence mode="popLayout">
+                  {projects.map((project) => (
+                    <ProjectItem
+                      key={project.id}
+                      project={project}
+                      isActive={project.id === activeProjectId}
+                      isSwipeOpen={openSwipeId === project.id}
+                      onSelect={() => handleSelectProject(project.id)}
+                      onDelete={() => handleDeleteProject(project.id)}
+                      onPin={() => handlePin(project.id)}
+                      onLongPress={() => handleLongPress(project)}
+                      onSwipeChange={(isOpen) => setOpenSwipeId(isOpen ? project.id : null)}
+                      closeOthers={closeAllSwipes}
+                    />
+                  ))}
+                </AnimatePresence>
+              )}
+            </div>
           </div>
 
           {/* Create New Project Button */}
-          <div className="mt-8">
+          <div className="px-4 py-4 border-t border-white/10">
             <Button
               onClick={() => setIsCreateOpen(true)}
-              className="w-full border border-white/30 hover:border-white/50 bg-transparent hover:bg-white/10 text-white font-extralight tracking-wide"
+              className="w-full border border-white/30 hover:border-white/50 bg-transparent hover:bg-white/10 text-white font-extralight tracking-wide text-xs"
             >
-              <Plus className="mr-2 w-[18px] h-[18px]" strokeWidth={1.5} />
+              <Plus className="mr-2 w-4 h-4" strokeWidth={1.5} />
               Nouveau Projet
             </Button>
           </div>
-        </div>
-      </div>
+        </SheetContent>
+      </Sheet>
 
       {/* Dialogs */}
       <CreateProjectDialog
@@ -269,7 +314,7 @@ const Portfolio = ({
           onSave={onUpdateProject}
         />
       )}
-    </div>
+    </>
   );
 };
 
