@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, BarChart2 } from "lucide-react";
+import { Settings } from "lucide-react";
 import ProgressRing from "./ProgressRing";
 import LuxuryProgressBar from "./LuxuryProgressBar";
 import PalierControls from "./PalierControls";
@@ -9,7 +9,7 @@ import DepositHistory from "./DepositHistory";
 import DepositCalendar from "./DepositCalendar";
 import ProgressChart from "./ProgressChart";
 import AnimatedCounter from "./AnimatedCounter";
-import Portfolio from "@/pages/Portfolio";
+import Portfolio from "./Portfolio";
 import ImageGallery from "./ImageGallery";
 import GalleryManager from "./GalleryManager";
 import { useProjectManager } from "@/hooks/useProjectManager";
